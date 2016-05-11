@@ -276,37 +276,37 @@ bool DevInfoParser::PrintPSOperation(uint16_t op)
 	case PTP_OC_PS_StartShootingMode:
 		msg = msgPS_StartShootingMode;
 		break;
-	case PTP_OC_PS_EndShootingMode:			
+	case PTP_OC_PS_EndShootingMode:
 		msg = msgPS_EndShootingMode;
 		break;
-	case PTP_OC_PS_ViewfinderOn:				
+	case PTP_OC_PS_ViewfinderOn:
 		msg = msgPS_ViewfinderOn;
 		break;
-	case PTP_OC_PS_ViewfinderOff:			
+	case PTP_OC_PS_ViewfinderOff:
 		msg = msgPS_ViewfinderOff;
 		break;
-	case PTP_OC_PS_ReflectChanges:			
+	case PTP_OC_PS_ReflectChanges:
 		msg = msgPS_ReflectChanges;
 		break;
-	case PTP_OC_PS_CheckEvent:				
+	case PTP_OC_PS_CheckEvent:
 		msg = msgPS_CheckEvent;
 		break;
-	case PTP_OC_PS_FocusLock:				
+	case PTP_OC_PS_FocusLock:
 		msg = msgPS_FocusLock;
 		break;
-	case PTP_OC_PS_FocusUnlock:				
+	case PTP_OC_PS_FocusUnlock:
 		msg = msgPS_FocusUnlock;
 		break;
-	case PTP_OC_PS_InitiateCaptureInMemory:	
+	case PTP_OC_PS_InitiateCaptureInMemory:
 		msg = msgPS_InitiateCaptureInMemory;
 		break;
-	case PTP_OC_PS_GetPartialObject:			
+	case PTP_OC_PS_GetPartialObject:
 		msg = msgPS_GetPartialObject;
 		break;
-	case PTP_OC_PS_GetViewfinderImage:		
+	case PTP_OC_PS_GetViewfinderImage:
 		msg = msgPS_GetViewfinderImage;
 		break;
-	case PTP_OC_PS_GetChanges:		
+	case PTP_OC_PS_GetChanges:
 		msg = msgPS_GetChanges;
 		break;
 	case PTP_OC_PS_GetFolderEntries:
@@ -327,34 +327,34 @@ bool DevInfoParser::PrintEOSOperation(uint16_t op)
 	case PTP_OC_EOS_GetStorageIDs:
 		msg = msgEOS_GetStorageIDs;
 		break;
-	case PTP_OC_EOS_GetStorageInfo:			
+	case PTP_OC_EOS_GetStorageInfo:
 		msg = msgEOS_GetStorageInfo;
 		break;
-	case PTP_OC_EOS_GetObject:				
+	case PTP_OC_EOS_GetObject:
 		msg = msgEOS_GetObject;
 		break;
-	case PTP_OC_EOS_GetDeviceInfo:			
+	case PTP_OC_EOS_GetDeviceInfo:
 		msg = msgEOS_GetDeviceInfo;
 		break;
-	case PTP_OC_EOS_GetObjectIDs:			
+	case PTP_OC_EOS_GetObjectIDs:
 		msg = msgEOS_GetObjectIDs;
 		break;
-	case PTP_OC_EOS_Capture:					
+	case PTP_OC_EOS_Capture:
 		msg = msgEOS_Capture;
 		break;
-	case PTP_OC_EOS_SetDevicePropValue:		
+	case PTP_OC_EOS_SetDevicePropValue:
 		msg = msgEOS_SetDevicePropValue;
 		break;
-	case PTP_OC_EOS_SetPCConnectMode:		
+	case PTP_OC_EOS_SetPCConnectMode:
 		msg = msgEOS_SetPCConnectMode;
 		break;
-	case PTP_OC_EOS_SetExtendedEventInfo:	
+	case PTP_OC_EOS_SetExtendedEventInfo:
 		msg = msgEOS_SetExtendedEventInfo;
 		break;
-	case PTP_OC_EOS_GetEvent:				
+	case PTP_OC_EOS_GetEvent:
 		msg = msgEOS_GetEvent;
 		break;
-	case PTP_OC_EOS_GetLiveViewPicture:		
+	case PTP_OC_EOS_GetLiveViewPicture:
 		msg = msgEOS_GetLiveViewPicture;
 		break;
 	case PTP_OC_EOS_MoveFocus:

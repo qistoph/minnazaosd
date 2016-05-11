@@ -37,18 +37,18 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /* **************** MAIN PROGRAM - MODULES ******************** */
 /* ************************************************************ */
 
-#undef PROGMEM 
-#define PROGMEM __attribute__(( section(".progmem.data") )) 
+#undef PROGMEM
+#define PROGMEM __attribute__(( section(".progmem.data") ))
 
-#undef PSTR 
-#define PSTR(s) (__extension__({static prog_char __c[] PROGMEM = (s); &__c[0];})) 
+#undef PSTR
+#define PSTR(s) (__extension__({static prog_char __c[] PROGMEM = (s); &__c[0];}))
 
 
 /* **********************************************/
 /* ***************** INCLUDES *******************/
 
-//#define membug 
-//#define FORCEINIT  // You should never use this unless you know what you are doing 
+//#define membug
+//#define FORCEINIT  // You should never use this unless you know what you are doing
 
 
 // AVR Includes
@@ -107,7 +107,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 /* *************************************************/
 /* ***************** DEFINITIONS *******************/
 
-//OSD Hardware 
+//OSD Hardware
 //#define ArduCAM328
 #define MinimOSD
 
@@ -125,7 +125,7 @@ along with this program. If not, see <http://www.gnu.org/licenses/>
 
 // Objects and Serial definitions
 FastSerialPort0(Serial);
-OSD osd; //OSD object 
+OSD osd; //OSD object
 
 SimpleTimer  mavlinkTimer;
 
@@ -133,7 +133,7 @@ SimpleTimer  mavlinkTimer;
 /* **********************************************/
 /* ***************** SETUP() *******************/
 
-void setup() 
+void setup()
 {
 #ifdef ArduCAM328
     pinMode(10, OUTPUT); // USB ArduCam Only
@@ -148,11 +148,11 @@ void setup()
     Serial.println(freeMem());
 #endif
 
-    // Prepare OSD for displaying 
+    // Prepare OSD for displaying
     unplugSlaves();
     osd.init();
 
-    // Start 
+    // Start
     startPanels();
     delay(500);
 
@@ -160,7 +160,7 @@ void setup()
 #ifdef membug
     osd.setPanel(1,1);
     osd.openPanel();
-    osd.printf("%i",freeMem()); 
+    osd.printf("%i",freeMem());
     osd.closePanel();
 #endif
 
@@ -176,7 +176,7 @@ void setup()
     if(readEEPROM(CHK1) + readEEPROM(CHK2) != VER) {
         osd.setPanel(6,9);
         osd.openPanel();
-        osd.printf_P(PSTR("Missing/Old Config")); 
+        osd.printf_P(PSTR("Missing/Old Config"));
         osd.closePanel();
         InitializeOSD();
     }
@@ -225,7 +225,7 @@ void setup()
     delay(1000);
 #endif
 
-    // Startup MAVLink timers  
+    // Startup MAVLink timers
     mavlinkTimer.Set(&OnMavlinkTimer, 100);
 
     // House cleaning, clear display and enable timers
@@ -241,7 +241,7 @@ void setup()
 
 // Mother of all happenings, The loop()
 // As simple as possible.
-void loop() 
+void loop()
 {
 // JRChange: DJI NazaTalk:
 #ifdef PROTOCOL_NAZATALK
@@ -255,7 +255,7 @@ void loop()
         osd.clear();
         osd.setPanel(3,10);
         osd.openPanel();
-        osd.printf_P(PSTR("Requesting DataStreams...")); 
+        osd.printf_P(PSTR("Requesting DataStreams..."));
         osd.closePanel();
         for(int n = 0; n < 3; n++){
             request_mavlink_rates();//Three times to certify it will be readed
@@ -305,13 +305,13 @@ void OnMavlinkTimer()			// duration is up to approx. 10ms depending on choosen d
         chan1_r_middle = chan1_raw;
         chan2_r_middle = chan2_raw;
     }
-    
+
     if (chan2_raw > chan2_r_middle + P_OFFSET)		osd_lat -= LAT_STEPS;
     else if (chan2_raw < chan2_r_middle - P_OFFSET)	osd_lat += LAT_STEPS;
-    
+
     if (chan1_raw > chan1_r_middle + P_OFFSET)		osd_lon += LON_STEPS;
     else if (chan1_raw < chan1_r_middle - P_OFFSET)	osd_lon -= LON_STEPS;
-    
+
     osd_heading = 0.0;
 #else
     osd_heading = osd_heading > 360.0 ? 0.0 : osd_heading + 0.5;

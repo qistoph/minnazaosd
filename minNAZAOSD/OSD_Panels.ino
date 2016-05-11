@@ -11,7 +11,7 @@ TODO:
 	refactor:
 		switchPanels
 		casts (double) -> (float) etc.
-	
+
 	maybe implement usage of panCallsign
 
 */
@@ -113,7 +113,7 @@ void writePanels() {
     if (setup_menu_active) {
         panSetup();
     } else {
-    
+
 #ifdef NAZA_INT_DEBUG
 	osd.setPanel(0, 2);
 	osd.openPanel();
@@ -157,7 +157,7 @@ void writePanels() {
             if (ISc(panel,CurA_BIT))		panCur_A(panCur_A_XY[0][panel], panCur_A_XY[1][panel]);
             if (ISa(panel,Bp_BIT))		panBatteryPercent(panBatteryPercent_XY[0][panel], panBatteryPercent_XY[1][panel]);
             if (ISb(panel,Time_BIT))		panTime(panTime_XY[0][panel], panTime_XY[1][panel]);
-	    
+
             if (ISc(panel,Hor_BIT))		panHorizon(panHorizon_XY[0][panel], panHorizon_XY[1][panel]);
 #ifdef SHOW_RADAR
 	    // these GPS related panels are active if GPS was valid before
@@ -174,7 +174,7 @@ void writePanels() {
     // OSD debug for development
     osd.setPanel(13,4);
     osd.openPanel();
-    osd.printf("%i", freeMem()); 
+    osd.printf("%i", freeMem());
     osd.closePanel();
 #endif
 }
@@ -193,19 +193,19 @@ void switchPanels() {
 
     if (ch_toggle == 4) {
         if (0) { //(osd_mode != FLIGHTSTATUS_FLIGHTMODE_AUTOTUNE) && (osd_mode != FLIGHTSTATUS_FLIGHTMODE_POSITIONHOLD)) {
-            if (osd_off_switch != osd_mode) { 
+            if (osd_off_switch != osd_mode) {
                 osd_off_switch = osd_mode;
                 osd_switch_time = millis();
 
                 if (osd_off_switch == osd_switch_last) {
                     switch (panel) {
 			case 0:
-                            panel = 1;                                                        
+                            panel = 1;
                             if (millis() <= SETUP_TIME) {
                                 setup_menu_active = false; //true;
                             } else {
                                 setup_menu_active = false;
-                            }                            
+                            }
                            break;
 			case 1:
                             panel = npanels;
@@ -248,7 +248,7 @@ void switchPanels() {
                 setup_menu_active = false;
                 osd.clear();
                 panel = 1;					// second panel
-            }        
+            }
         } else {
             if (ch_raw > PWM_LO) {
                 if (millis() <= SETUP_TIME && !setup_menu_active) {
@@ -270,7 +270,7 @@ void switchPanels() {
                     }
                 }
 	    }
-        }    
+        }
     }
 }
 
@@ -393,7 +393,7 @@ void panSetup() {
 
     if (millis() > setup_debounce_timer) {			// RC-TX stick debouncing
 	setup_debounce_timer = millis() + SETUP_DEBOUNCE_TIME;
-	
+
         osd.clear();
         osd.setPanel(3, 1);
         osd.openPanel();
@@ -406,7 +406,7 @@ void panSetup() {
 	osd.printf("volt div ratio:  %5i|", volt_div_ratio);
 	osd.printf("amp offset:      %5i|", curr_amp_offset);
 	osd.printf("amp per volt:    %5i|||", curr_amp_per_volt);
-	
+
 #ifdef SETUP_TS
 	chan1_raw_middle = PWM_MI;
 	chan2_raw_middle = PWM_MI;
@@ -419,7 +419,7 @@ void panSetup() {
             chan1_raw_middle = pwm_get();
             chan2_raw_middle = pwm_get();
         }
-	
+
 	chan1_raw = pwm_get();
 #endif
 
@@ -439,7 +439,7 @@ void panSetup() {
 	else if ((chan1_raw - 3*PWM_OFFSET) > chan1_raw_middle ) delta = 100;
 	else if ((chan1_raw - 2*PWM_OFFSET) > chan1_raw_middle ) delta = 10;
 	else if ((chan1_raw - 1*PWM_OFFSET) > chan1_raw_middle ) delta = 1;
-	
+
 	     if ((chan2_raw + PWM_OFFSET) < chan2_raw_middle ) setup_menu = 1;
         else if ((chan2_raw - PWM_OFFSET) > chan2_raw_middle ) setup_menu = 3;
 
@@ -457,7 +457,7 @@ void panSetup() {
 		curr_amp_per_volt = change_int_value(curr_amp_per_volt, curr_amp_per_volt_ADDR, delta);
 		break;
 	}
-        
+
         osd.closePanel();
     }
 }
@@ -474,7 +474,7 @@ void panSetup() {
 void panBoot(int first_col, int first_line) {
     osd.setPanel(first_col, first_line);
     osd.openPanel();
-    osd.printf_P(PSTR("booting up:\xed\xf2\xf2\xf2\xf2\xf2\xf2\xf2\xf3")); 
+    osd.printf_P(PSTR("booting up:\xed\xf2\xf2\xf2\xf2\xf2\xf2\xf2\xf3"));
     osd.closePanel();
 }
 
@@ -616,7 +616,7 @@ void panAlt(int first_col, int first_line) {
 /******************************************************************/
 // Panel  : panVel
 // Needs  : X, Y locations
-// Output : Velocity 
+// Output : Velocity
 /******************************************************************/
 void panVel(int first_col, int first_line) {
     osd.setPanel(first_col, first_line);
@@ -738,11 +738,11 @@ void panPitch(int first_col, int first_line) {
     osd.closePanel();
 }
 
-  
+
 /******************************************************************/
 // Panel  : panThr
 // Needs  : X, Y locations
-// Output : Throttle 
+// Output : Throttle
 /******************************************************************/
 void panThr(int first_col, int first_line) {
     osd.setPanel(first_col, first_line);
@@ -753,13 +753,13 @@ void panThr(int first_col, int first_line) {
 
 
 /******************************************************************/
-// Panel  : panFlightMode 
+// Panel  : panFlightMode
 // Needs  : X, Y locations
 // Output : current flight modes
 /******************************************************************/
 void panFlightMode(int first_col, int first_line) {
     char* mode_str="---";
-    
+
     osd.setPanel(first_col, first_line);
     osd.openPanel();
          if (osd_mode == LED_MODE_UNKNOWN)	mode_str = "---";
@@ -827,7 +827,7 @@ void panTime(int first_col, int first_line) {
 
 #ifdef JR_SPECIALS	// Time and travel distance reset when measured current > TIME_RESET_AMPERE for the 1st time
     static unsigned long engine_start_time = 0;
-    
+
     if (engine_start_time == 0 && osd_curr_A > TIME_RESET_AMPERE * 100) {
         engine_start_time = millis();
 	osd_travel_distance = 0;
@@ -836,7 +836,7 @@ void panTime(int first_col, int first_line) {
 #else
     start_time = (int) (millis() / 1000);
 #endif
-    
+
     osd.setPanel(first_col, first_line);
     osd.openPanel();
 #if defined FLIGHT_BATT_ON_REVO
@@ -888,17 +888,17 @@ void panHorizon(int first_col, int first_line) {
 void panUAVPosition(int center_col, int center_line) {
     static int last_x = 0;
     static int last_y = 0;
-    
+
 #ifdef USE_DIRECTED
     int index;
     index = (int)((osd_heading + 22.5) / 45.0);
     index = index > 7 ? 0 : index;
 #endif
-    
+
     // calculate distances from home in lat (y) and lon (x) direction in [m]
     int dy = (int)(-111319.5 * (osd_home_lat - osd_lat));
     int dx = (int)(-111319.5 * (osd_home_lon - osd_lon) * cos(fabs(osd_home_lat) * 0.0174532925));
-    
+
     // calculate display offset in y and x direction
     int zoom = max((int)(abs(dy) / STEP_WIDTH), (int)(abs(dx) / STEP_WIDTH)) + 1;
     osd.setPanel(center_col + 8, center_line);
@@ -935,7 +935,7 @@ void panUAVPosition(int center_col, int center_line) {
 // Setup change function
 int change_int_value(int value, int address, int delta) {
     int value_old = value;
-    
+
     osd.printf_P(PSTR("|                   "));
     switch (delta) {
         case 100:
@@ -952,7 +952,7 @@ int change_int_value(int value, int address, int delta) {
             osd.printf_P(PSTR("  \xBF"));
 	break;
     }
-		
+
     value += delta;
 
     if (value != value_old) {
@@ -1006,7 +1006,7 @@ void showHorizon(int start_col, int start_row) {
     int line_set = LINE_SET_STRAIGHT__;
     int line_set_overflow = LINE_SET_STRAIGHT_O;
     int subval_overflow = 9;
-    
+
     // preset the line char attributes
     roll = osd_roll;
     if ((roll >= 0 && roll < 90) || (roll >= -179 && roll < -90)) {	// positive angle line chars
@@ -1032,7 +1032,7 @@ void showHorizon(int start_col, int start_row) {
             subval_overflow = 8;
 	}
     }
-    
+
     pitch_line = round(tan(-AH_PITCH_FACTOR * osd_pitch) * AH_TOTAL_LINES) + AH_TOTAL_LINES/2;	// 90 total lines
     for (col=1; col<=AH_COLS; col++) {
         middle = col * CHAR_COLS - (AH_COLS/2 * CHAR_COLS) - CHAR_COLS/2;	  // -66 to +66	center X point at middle of each column
@@ -1040,11 +1040,11 @@ void showHorizon(int start_col, int start_row) {
         if (hit >= 1 && hit <= AH_TOTAL_LINES) {
 	    row = (hit-1) / CHAR_ROWS;						  // 0 to 4 bottom-up
 	    subval = (hit - (row * CHAR_ROWS) + 1) / (CHAR_ROWS / CHAR_SPECIAL);  // 1 to 9
-	    
+
 	    // print the line char
             osd.openSingle(start_col + col - 1, start_row + AH_ROWS - row - 1);
             osd.printf("%c", line_set + subval);
-	    
+
 	    // check if we have to print an overflow line char
 	    if (subval >= subval_overflow && row < 4) {	// only if it is a char which needs overflow and if it is not the upper most row
                 osd.openSingle(start_col + col - 1, start_row + AH_ROWS - row - 2);

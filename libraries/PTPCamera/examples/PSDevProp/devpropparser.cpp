@@ -1,76 +1,76 @@
 #include "devpropparser.h"
 
-const char* DevPropParser::dtNames1[] PROGMEM = 
+const char* DevPropParser::dtNames1[] PROGMEM =
 {
 	msgUNDEF,
-	msgINT8,	
-	msgUINT8,	
-	msgINT16,	
+	msgINT8,
+	msgUINT8,
+	msgINT16,
 	msgUINT16,
-	msgINT32,	
+	msgINT32,
 	msgUINT32,
-	msgINT64,	
+	msgINT64,
 	msgUINT64,
 	msgINT128,
 	msgUINT128
 };
 
-const char* DevPropParser::dtNames2[] PROGMEM = 
+const char* DevPropParser::dtNames2[] PROGMEM =
 {
 	msgUNDEF,
 	msgAINT8,
-	msgAUINT8,	
-	msgAINT16,	
+	msgAUINT8,
+	msgAINT16,
 	msgAUINT16,
 	msgAINT32,
 	msgAUINT32,
-	msgAINT64,	
+	msgAINT64,
 	msgAUINT64,
 	msgAINT128,
 	msgAUINT128
 };
 
-const char* DevPropParser::prNames[] PROGMEM = 
+const char* DevPropParser::prNames[] PROGMEM =
 {
-	msgUndefined,					
-	msgBatteryLevel,				
-	msgFunctionalMode,			
-	msgImageSize,					
-	msgCompressionSetting,		
-	msgWhiteBalance,				
-	msgRGBGain,					
-	msgFNumber,					
-	msgFocalLength,				
-	msgFocusDistance,				
-	msgFocusMode,					
-	msgExposureMeteringMode,		
-	msgFlashMode,					
-	msgExposureTime,				
-	msgExposureProgramMode,		
-	msgExposureIndex,				
-	msgExposureBiasCompensation,	
-	msgDateTime,					
-	msgCaptureDelay,				
-	msgStillCaptureMode,			
-	msgContrast,					
-	msgSharpness,					
-	msgDigitalZoom,				
-	msgEffectMode,				
-	msgBurstNumber,				
-	msgBurstInterval,				
-	msgTimelapseNumber,			
-	msgTimelapseInterval,			
-	msgFocusMeteringMode,			
-	msgUploadURL,					
-	msgArtist,					
-	msgCopyrightInfo				
+	msgUndefined,
+	msgBatteryLevel,
+	msgFunctionalMode,
+	msgImageSize,
+	msgCompressionSetting,
+	msgWhiteBalance,
+	msgRGBGain,
+	msgFNumber,
+	msgFocalLength,
+	msgFocusDistance,
+	msgFocusMode,
+	msgExposureMeteringMode,
+	msgFlashMode,
+	msgExposureTime,
+	msgExposureProgramMode,
+	msgExposureIndex,
+	msgExposureBiasCompensation,
+	msgDateTime,
+	msgCaptureDelay,
+	msgStillCaptureMode,
+	msgContrast,
+	msgSharpness,
+	msgDigitalZoom,
+	msgEffectMode,
+	msgBurstNumber,
+	msgBurstInterval,
+	msgTimelapseNumber,
+	msgTimelapseInterval,
+	msgFocusMeteringMode,
+	msgUploadURL,
+	msgArtist,
+	msgCopyrightInfo
 };
 
 void DevPropParser::PrintDataType(uint8_t **pp, uint16_t *pcntdn)
 {
 	dataType = *((uint16_t*)(*pp));
         bytesSize = GetDataSize();
-        
+
 	Notify(PSTR("Data Type:\t\t"));
 
 	switch (((dataType >> 8) & 0xFF))
@@ -90,7 +90,7 @@ void DevPropParser::PrintDataType(uint8_t **pp, uint16_t *pcntdn)
 		Notify(PSTR("Unknown"));
 	}
 	Notify(PSTR("\r\n"));
-	(*pp)		+= 2;		
+	(*pp)		+= 2;
 	(*pcntdn)	-= 2;
 }
 
@@ -112,7 +112,7 @@ void DevPropParser::PrintDevProp(uint8_t **pp, uint16_t *pcntdn)
 		PrintHex<uint16_t>(op);
 		Notify(PSTR(" (Vendor defined)\r\n"));
 	}
-	(*pp)		+= 2;		
+	(*pp)		+= 2;
 	(*pcntdn)	-= 2;
 }
 
@@ -120,7 +120,7 @@ void DevPropParser::PrintGetSet(uint8_t **pp, uint16_t *pcntdn)
 {
 	Notify(PSTR("Get/Set:\t\t"));
 	Notify(((**pp) == 0x01) ? PSTR("Get/Set\r\n") : (!(**pp)) ? PSTR("Get\r\n") : PSTR("Illegal\r\n"));
-	(*pp) ++;		
+	(*pp) ++;
 	(*pcntdn) --;
 }
 
@@ -128,21 +128,21 @@ uint8_t DevPropParser::GetDataSize()
 {
 	switch (dataType)
 	{
-	case PTP_DTC_INT8:	
-	case PTP_DTC_UINT8:	
+	case PTP_DTC_INT8:
+	case PTP_DTC_UINT8:
             bytesSize = 1;
 	    break;
-	case PTP_DTC_AINT8:	
+	case PTP_DTC_AINT8:
 	case PTP_DTC_AUINT8:
             bytesSize = 1;
 	    enumParser.Initialize(4, bytesSize, &theBuffer);
 	    break;
-	case PTP_DTC_INT16:	
-	case PTP_DTC_UINT16:	
+	case PTP_DTC_INT16:
+	case PTP_DTC_UINT16:
             bytesSize = 2;
 	    enumParser.Initialize(4, bytesSize, &theBuffer);
             break;
-	case PTP_DTC_AINT16:	
+	case PTP_DTC_AINT16:
 	case PTP_DTC_AUINT16:
             bytesSize = 2;
 	    break;
@@ -150,29 +150,29 @@ uint8_t DevPropParser::GetDataSize()
             bytesSize = 2;
 	    enumParser.Initialize(1, bytesSize, &theBuffer);
 	    break;
-	case PTP_DTC_INT32:	
-	case PTP_DTC_UINT32:	
+	case PTP_DTC_INT32:
+	case PTP_DTC_UINT32:
             bytesSize = 4;
 	    break;
-	case PTP_DTC_AINT32:	
+	case PTP_DTC_AINT32:
 	case PTP_DTC_AUINT32:
             bytesSize = 4;
 	    enumParser.Initialize(4, bytesSize, &theBuffer);
 	    break;
-	case PTP_DTC_INT64:	
-	case PTP_DTC_UINT64:	
+	case PTP_DTC_INT64:
+	case PTP_DTC_UINT64:
             bytesSize = 8;
 	    break;
-	case PTP_DTC_AINT64:	
+	case PTP_DTC_AINT64:
 	case PTP_DTC_AUINT64:
             bytesSize = 8;
 	    enumParser.Initialize(4, bytesSize, &theBuffer);
 	    break;
-	case PTP_DTC_INT128:	
-	case PTP_DTC_UINT128:	
+	case PTP_DTC_INT128:
+	case PTP_DTC_UINT128:
             bytesSize = 16;
 	    break;
-	case PTP_DTC_AINT128:	
+	case PTP_DTC_AINT128:
 	case PTP_DTC_AUINT128:
             bytesSize = 16;
             enumParser.Initialize(4, bytesSize, &theBuffer);
@@ -185,55 +185,55 @@ bool DevPropParser::PrintValue(uint8_t **pp, uint16_t *pcntdn)
 {
 	switch (dataType)
 	{
-	case PTP_DTC_INT8:	
-	case PTP_DTC_UINT8:	
+	case PTP_DTC_INT8:
+	case PTP_DTC_UINT8:
 		PrintHex<uint8_t>(**pp);
 		(*pp) ++;
 		(*pcntdn) --;
 		break;
-	case PTP_DTC_AINT8:	
+	case PTP_DTC_AINT8:
 	case PTP_DTC_AUINT8:
 		if (!enumParser.Parse(pp, pcntdn, (PTP_ARRAY_EL_FUNC)&PrintByte))
 			return false;
 		break;
-	case PTP_DTC_INT16:	
-	case PTP_DTC_UINT16:	
+	case PTP_DTC_INT16:
+	case PTP_DTC_UINT16:
 		PrintHex<uint16_t>(*((uint16_t*)*pp));
 		(*pp)		+= 2;
 		(*pcntdn)	-= 2;
 		break;
-	case PTP_DTC_AINT16:	
+	case PTP_DTC_AINT16:
 	case PTP_DTC_AUINT16:
 		if (!enumParser.Parse(pp, pcntdn, (PTP_ARRAY_EL_FUNC)&PrintTwoBytes))
 			return false;
 		break;
-	case PTP_DTC_INT32:	
-	case PTP_DTC_UINT32:	
+	case PTP_DTC_INT32:
+	case PTP_DTC_UINT32:
 		PrintHex<uint32_t>(*((uint32_t*)*pp));
 		(*pp)		+= 4;
 		(*pcntdn)	-= 4;
 		break;
-	case PTP_DTC_AINT32:	
+	case PTP_DTC_AINT32:
 	case PTP_DTC_AUINT32:
 		if (!enumParser.Parse(pp, pcntdn, (PTP_ARRAY_EL_FUNC)&PrintFourBytes))
 			return false;
 		break;
-	case PTP_DTC_INT64:	
-	case PTP_DTC_UINT64:	
+	case PTP_DTC_INT64:
+	case PTP_DTC_UINT64:
 		(*pp)		+= 8;
 		(*pcntdn)	-= 8;
 		break;
-	case PTP_DTC_AINT64:	
+	case PTP_DTC_AINT64:
 	case PTP_DTC_AUINT64:
 		if (!enumParser.Parse(pp, pcntdn, (PTP_ARRAY_EL_FUNC)&PrintEightBytes))
 			return false;
 		break;
-	case PTP_DTC_INT128:	
-	case PTP_DTC_UINT128:	
+	case PTP_DTC_INT128:
+	case PTP_DTC_UINT128:
 		(*pp)		+= 16;
 		(*pcntdn)	-= 16;
 		break;
-	case PTP_DTC_AINT128:	
+	case PTP_DTC_AINT128:
 	case PTP_DTC_AUINT128:
 		if (!enumParser.Parse(pp, pcntdn, NULL))
 			return false;
@@ -275,7 +275,7 @@ bool DevPropParser::ParseEnumArray(uint8_t **pp, uint16_t *pcntdn)
         {
             if (!enumParser.Parse(pp, pcntdn, (PTP_ARRAY_EL_FUNC)&PrintEnumValue), PTPListParser::modeArray, this)
                 return false;
-                
+
             Notify(PSTR("\r\n"));
             enumParser.Initialize(4, bytesSize, &theBuffer);
         }
@@ -338,7 +338,7 @@ void DevPropParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 		nStage = 8; //++;
 	case 8:
 		formFlag = (*p);
-		p ++;		
+		p ++;
 		cntdn --;
 		nStage = 9; //++;
 	case 9:
@@ -361,7 +361,7 @@ void DevPropParser::Parse(const uint16_t len, const uint8_t *pbuf, const uint32_
 
                 if (formFlag)
 			Notify(PSTR("}\r\n"));
-		
+
 		nStage = 0;
 	}
 }

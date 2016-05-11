@@ -7,27 +7,27 @@
 #include <WProgram.h>
 #include <canoneos.h>
 
-enum TextMenuSignals 
+enum TextMenuSignals
 {
     MENU_SELECT_SIG = Q_USER_SIG,
     TICK_SIG
 };
 
-struct TickEvt : public QEvent 
+struct TickEvt : public QEvent
 {
     uint8_t fine_time;                              // the fine 1/10 s counter
 };
 
-struct MenuSelectEvt : public QEvent 
+struct MenuSelectEvt : public QEvent
 {
     uint8_t  item_index;
 };
 
-class EOSConsole : public QHsm 
+class EOSConsole : public QHsm
 {
     static void PrintMenuTitles(uint8_t count, const char **menu);
     static void ShowParams();
-  
+
 public:
     EOSConsole()
         : QHsm((QStateHandler)&EOSConsole::Initial)

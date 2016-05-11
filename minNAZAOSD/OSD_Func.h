@@ -81,7 +81,7 @@ void setHomeVars(OSD &osd)
 #ifdef PROTOCOL_NAZATALK
   float dstlon, dstlat;
   long bearing;
-  
+
   if (osd_got_home) {
     // shrinking factor for longitude going to poles direction
     float rads = fabs(osd_home_lat) * 0.0174532925;
@@ -92,7 +92,7 @@ void setHomeVars(OSD &osd)
     dstlat = fabs(osd_home_lat - osd_lat) * 111319.5;
     dstlon = fabs(osd_home_lon - osd_lon) * 111319.5 * scaleLongDown;
     osd_home_distance = sqrt(sq(dstlat) + sq(dstlon));
-	  
+
     //DIR to Home
     dstlon = (osd_home_lon - osd_lon);					// OffSet X
     dstlat = (osd_home_lat - osd_lat) * scaleLongUp;			// OffSet Y
@@ -127,7 +127,7 @@ void setHomeVars(OSD &osd)
 #else
   float dstlon, dstlat;
   long bearing;
-  
+
   if(osd_got_home == 0 && osd_fix_type > 1){
     osd_home_lat = osd_lat;  // preset this osd_lat as osd_home_lat
     osd_home_lon = osd_lon;  // preset this osd_lon as osd_home_lon

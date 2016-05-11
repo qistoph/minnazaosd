@@ -375,4 +375,3 @@ void USB::Task( void )      //USB state machine
             break;
     }// switch( usb_task_state
 }    
-  

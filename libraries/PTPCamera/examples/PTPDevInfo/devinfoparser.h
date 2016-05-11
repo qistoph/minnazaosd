@@ -56,18 +56,18 @@ const char msgSetObjectReferences			[] PROGMEM = "SetObjectReferences";
 const char msgSkip							[] PROGMEM = "Skip";						
 
 // Canon EOS Operations
-const char msgEOS_GetStorageIDs				[] PROGMEM = "EOS_GetStorageIDs";			
-const char msgEOS_GetStorageInfo			[] PROGMEM = "EOS_GetStorageInfo";		
-const char msgEOS_GetObject					[] PROGMEM = "EOS_GetObject";				
-const char msgEOS_GetDeviceInfo				[] PROGMEM = "EOS_GetDeviceInfo";			
-const char msgEOS_GetObjectIDs				[] PROGMEM = "EOS_GetObjectIDs";			
-const char msgEOS_Capture					[] PROGMEM = "EOS_Capture";				
-const char msgEOS_SetDevicePropValue		[] PROGMEM = "EOS_SetDevicePropValue";	
-const char msgEOS_SetPCConnectMode			[] PROGMEM = "EOS_SetPCConnectMode";		
-const char msgEOS_SetExtendedEventInfo		[] PROGMEM = "EOS_SetExtendedEventInfo";	
-const char msgEOS_GetEvent					[] PROGMEM = "EOS_GetEvent";				
-const char msgEOS_GetLiveViewPicture		[] PROGMEM = "EOS_GetLiveViewPicture";	
-const char msgEOS_MoveFocus					[] PROGMEM = "EOS_MoveFocus";				
+const char msgEOS_GetStorageIDs				[] PROGMEM = "EOS_GetStorageIDs";
+const char msgEOS_GetStorageInfo			[] PROGMEM = "EOS_GetStorageInfo";
+const char msgEOS_GetObject					[] PROGMEM = "EOS_GetObject";
+const char msgEOS_GetDeviceInfo				[] PROGMEM = "EOS_GetDeviceInfo";
+const char msgEOS_GetObjectIDs				[] PROGMEM = "EOS_GetObjectIDs";
+const char msgEOS_Capture					[] PROGMEM = "EOS_Capture";
+const char msgEOS_SetDevicePropValue		[] PROGMEM = "EOS_SetDevicePropValue";
+const char msgEOS_SetPCConnectMode			[] PROGMEM = "EOS_SetPCConnectMode";
+const char msgEOS_SetExtendedEventInfo		[] PROGMEM = "EOS_SetExtendedEventInfo";
+const char msgEOS_GetEvent					[] PROGMEM = "EOS_GetEvent";
+const char msgEOS_GetLiveViewPicture		[] PROGMEM = "EOS_GetLiveViewPicture";
+const char msgEOS_MoveFocus					[] PROGMEM = "EOS_MoveFocus";
 
 // Canon PowerShot Operations
 const char msgPS_GetObjectSize				[] PROGMEM = "PS_GetObjectSize";

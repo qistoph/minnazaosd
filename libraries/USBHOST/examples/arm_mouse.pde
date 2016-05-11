@@ -3,7 +3,7 @@
 #include <Spi.h>
 #include <Max3421e.h>
 #include <Usb.h>
- 
+
 #define DEVADDR 1
 #define CONFVALUE 1
 
@@ -13,7 +13,7 @@
 /* Arm dimensions( mm ) */
 #define BASE_HGT 67.31      //base hight 2.65"
 #define HUMERUS 146.05      //shoulder-to-elbow "bone" 5.75"
-#define ULNA 187.325        //elbow-to-wrist "bone" 7.375"   
+#define ULNA 187.325        //elbow-to-wrist "bone" 7.375"
 #define GRIPPER 100.00      //gripper (incl.heavy duty wrist rotate mechanism) length 3.94"
 
 #define ftl(x) ((x)>=0?(long)((x)+0.5):(long)((x)-0.5))  //float to long conversion
@@ -40,7 +40,7 @@ float uln_sq = ULNA*ULNA;
 
 void setup();
 void loop();
- 
+
 ServoShield servos;                       //ServoShield object
 MAX3421E Max;
 USB Usb;
@@ -52,10 +52,10 @@ struct {
   float y_coord;            // Y coordinate of the gripper tip
   float z_coord;            //Z coordinate of the gripper tip
   float gripper_angle;      //gripper angle
-  int16_t gripper_servo;   //gripper servo pulse duration 
+  int16_t gripper_servo;   //gripper servo pulse duration
   int16_t wrist_rotate;    //wrist rotate servo pulse duration
 } armdata;
-   
+
 void setup()
 {
   /* set servo end points */
@@ -68,7 +68,7 @@ void setup()
   /**/
 //  servo_park();
   arm_park();
-  
+
   servos.start();                         //Start the servo shield
   Max.powerOn();
   Serial.begin( 115200 );
@@ -88,10 +88,10 @@ byte rcode;
  // circle();
     Max.Task();
     Usb.Task();
-    if( Usb.getUsbTaskState() == USB_STATE_CONFIGURING ) {  
+    if( Usb.getUsbTaskState() == USB_STATE_CONFIGURING ) {
         mouse_init();
     }//if( Usb.getUsbTaskState() == USB_STATE_CONFIGURING...
-    if( Usb.getUsbTaskState() == USB_STATE_RUNNING ) {  //poll the keyboard  
+    if( Usb.getUsbTaskState() == USB_STATE_RUNNING ) {  //poll the keyboard
         rcode = mouse_poll();
         if( rcode ) {
           Serial.print("Mouse Poll Error: ");
@@ -108,7 +108,7 @@ void mouse_init( void )
   /**/
   Usb.setDevTableEntry( 1, Usb.getDevTableEntry( 0,0 ) );              //copy device 0 endpoint information to device 1
   /* Configure device */
-  rcode = Usb.setConf( DEVADDR, 0, CONFVALUE );                    
+  rcode = Usb.setConf( DEVADDR, 0, CONFVALUE );
   if( rcode ) {
     Serial.print("Error configuring mouse. Return code : ");
     Serial.println( rcode, HEX );
@@ -169,7 +169,7 @@ byte mouse_poll( void )
         break;
       case 0x07:          //all 3 buttons pressed. Park the arm
         arm_park();
-        break;        
+        break;
     }//switch( buf[ 0 ...
     Serial.println( armdata.wrist_rotate, DEC );
 }
@@ -188,7 +188,7 @@ void set_arm( float x, float y, float z, float grip_angle_d )
   y = rdist;
   /* Grip offsets calculated based on grip angle */
   float grip_off_z = ( sin( grip_angle_r )) * GRIPPER;
-  float grip_off_y = ( cos( grip_angle_r )) * GRIPPER; 
+  float grip_off_y = ( cos( grip_angle_r )) * GRIPPER;
   /* Wrist position */
   float wrist_z = ( z - grip_off_z ) - BASE_HGT;
   float wrist_y = y - grip_off_y;
@@ -196,20 +196,20 @@ void set_arm( float x, float y, float z, float grip_angle_d )
   float s_w = ( wrist_z * wrist_z ) + ( wrist_y * wrist_y );
   float s_w_sqrt = sqrt( s_w );
   /* s_w angle to ground */
-  //float a1 = atan2( wrist_y, wrist_z ); 
+  //float a1 = atan2( wrist_y, wrist_z );
   float a1 = atan2( wrist_z, wrist_y );
   /* s_w angle to humerus */
   float a2 = acos((( hum_sq - uln_sq ) + s_w ) / ( 2 * HUMERUS * s_w_sqrt ));
   /* shoulder angle */
   float shl_angle_r = a1 + a2;
-  float shl_angle_d = degrees( shl_angle_r ); 
+  float shl_angle_d = degrees( shl_angle_r );
   /* elbow angle */
   float elb_angle_r = acos(( hum_sq + uln_sq - s_w ) / ( 2 * HUMERUS * ULNA ));
   float elb_angle_d = degrees( elb_angle_r );
   float elb_angle_dn = -( 180.0 - elb_angle_d );
   /* wrist angle */
   float wri_angle_d = ( grip_angle_d - elb_angle_dn ) - shl_angle_d;
- 
+
   /* Servo pulses */
   float bas_servopulse = 1500.0 - (( degrees( bas_angle_r )) * 11.11 );
   float shl_servopulse = 1500.0 + (( shl_angle_d - 90.0 ) * 6.6 );
@@ -221,7 +221,7 @@ void set_arm( float x, float y, float z, float grip_angle_d )
   servos.setposition( WRI_SERVO, ftl( wri_servopulse ));
   servos.setposition( SHL_SERVO, ftl( shl_servopulse ));
   servos.setposition( ELB_SERVO, ftl( elb_servopulse ));
-  
+
 }
 
 /* moves the arm to parking position */
@@ -273,7 +273,7 @@ void circle()
 {
   #define RADIUS 80.0
   //float angle = 0;
-  float zaxis,yaxis;  
+  float zaxis,yaxis;
   for( float angle = 0.0; angle < 360.0; angle += 1.0 ) {
       yaxis = RADIUS * sin( radians( angle )) + 200;
       zaxis = RADIUS * cos( radians( angle )) + 200;

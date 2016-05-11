@@ -19,7 +19,7 @@ extern uint8_t                 dpIso;
 extern uint8_t                 dpExpComp;
 
 /* fixes avr-gcc incompatibility with virtual destructors */
-void operator delete( void *p ) {} 
+void operator delete( void *p ) {}
 
 const char* menuMain[] = {"Capture", "View Settings", "Change Settings"};
 const char* menuChangeSettings[] = {"Aperture", "Shutter Speed", "WB", "Pict Style", "ISO", "Exp Comp"};
@@ -44,26 +44,26 @@ void EOSConsole::ShowParams()
     Notify(PSTR("\r\n"));
 }
 
-QState EOSConsole::Initial(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::Initial(EOSConsole *me, QEvent const *e)
 {
     return Q_TRAN(&EOSConsole::Inactive);
 }
 
-QState EOSConsole::Inactive(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::Inactive(EOSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
-        case TICK_SIG: 
+        case TICK_SIG:
             return Q_TRAN(&EOSConsole::Active);
     }
     return Q_SUPER(QHsm::top);
 }
 
-QState EOSConsole::Active(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::Active(EOSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
-        case Q_INIT_SIG: 
+        case Q_INIT_SIG:
             return Q_TRAN(&EOSConsole::MainMenu);
         case TICK_SIG:
             return Q_TRAN(&EOSConsole::Inactive);
@@ -78,7 +78,7 @@ void EOSConsole::PrintMenuTitles(uint8_t count, const char **menu)
     {
         Serial.print(i, DEC);
         Serial.print(". ");
-        
+
         if (i == 0)
             Serial.println("<..>");
         else
@@ -87,14 +87,14 @@ void EOSConsole::PrintMenuTitles(uint8_t count, const char **menu)
     Serial.println("");
 }
 
-QState EOSConsole::MainMenu(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::MainMenu(EOSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(3, menuMain);
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             switch (((MenuSelectEvt*)e)->item_index)
             {
@@ -116,20 +116,20 @@ QState EOSConsole::MainMenu(EOSConsole *me, QEvent const *e)
     return Q_SUPER(&EOSConsole::Active);
 }
 
-QState EOSConsole::ChangeSettingsMenu(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::ChangeSettingsMenu(EOSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(6, menuChangeSettings);
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             switch (((MenuSelectEvt*)e)->item_index)
             {
                 case 0:
                     return Q_TRAN(&EOSConsole::MainMenu);
-                
+
                 case 1:  // Aperture
                       return Q_TRAN(&EOSConsole::ChangeApertureMenu);
                 case 2:  // Shutter Speed
@@ -148,33 +148,33 @@ QState EOSConsole::ChangeSettingsMenu(EOSConsole *me, QEvent const *e)
     return Q_SUPER(&EOSConsole::Active);
 }
 
-QState EOSConsole::ChangeApertureMenu(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::ChangeApertureMenu(EOSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(2, menuUpDown);
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
                 return Q_TRAN(&EOSConsole::ChangeSettingsMenu);
-            
+
             case 2:
                 if (vlAperture.GetSize() > 0)
                 {
-                    new_value = vlAperture.GetNext(dpAperture, 1); 
+                    new_value = vlAperture.GetNext(dpAperture, 1);
                     Eos.SetProperty(EOS_DPC_Aperture, new_value);
                 }
                 return Q_HANDLED();
             case 1:
                 if (vlAperture.GetSize() > 0)
                 {
-                    new_value = vlAperture.GetPrev(dpAperture, 1); 
+                    new_value = vlAperture.GetPrev(dpAperture, 1);
                     Eos.SetProperty(EOS_DPC_Aperture, new_value);
                 }
                 return Q_HANDLED();
@@ -184,33 +184,33 @@ QState EOSConsole::ChangeApertureMenu(EOSConsole *me, QEvent const *e)
     return Q_SUPER(&EOSConsole::Active);
 }
 
-QState EOSConsole::ChangeShutterSpeedMenu(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::ChangeShutterSpeedMenu(EOSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(2, menuUpDown);
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
                 return Q_TRAN(&EOSConsole::ChangeSettingsMenu);
-            
+
             case 2:
                 if (vlShutterSpeed.GetSize() > 0)
                 {
-                    new_value = vlShutterSpeed.GetNext(dpShutterSpeed, 1); 
+                    new_value = vlShutterSpeed.GetNext(dpShutterSpeed, 1);
                     Eos.SetProperty(EOS_DPC_ShutterSpeed, new_value);
                 }
                 return Q_HANDLED();
             case 1:
                 if (vlShutterSpeed.GetSize() > 0)
                 {
-                    new_value = vlShutterSpeed.GetPrev(dpShutterSpeed, 1); 
+                    new_value = vlShutterSpeed.GetPrev(dpShutterSpeed, 1);
                     Eos.SetProperty(EOS_DPC_ShutterSpeed, new_value);
                 }
                 return Q_HANDLED();
@@ -220,33 +220,33 @@ QState EOSConsole::ChangeShutterSpeedMenu(EOSConsole *me, QEvent const *e)
     return Q_SUPER(&EOSConsole::Active);
 }
 
-QState EOSConsole::ChangeWBMenu(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::ChangeWBMenu(EOSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(2, menuUpDown);
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
                 return Q_TRAN(&EOSConsole::ChangeSettingsMenu);
-            
+
             case 2:
                 if (vlWhiteBalance.GetSize() > 0)
                 {
-                    new_value = vlWhiteBalance.GetNext(dpWb, 1); 
+                    new_value = vlWhiteBalance.GetNext(dpWb, 1);
                     Eos.SetProperty(EOS_DPC_WhiteBalance, new_value);
                 }
                 return Q_HANDLED();
             case 1:
                 if (vlAperture.GetSize() > 0)
                 {
-                    new_value = vlWhiteBalance.GetPrev(dpWb, 1); 
+                    new_value = vlWhiteBalance.GetPrev(dpWb, 1);
                     Eos.SetProperty(EOS_DPC_WhiteBalance, new_value);
                 }
                 return Q_HANDLED();
@@ -256,33 +256,33 @@ QState EOSConsole::ChangeWBMenu(EOSConsole *me, QEvent const *e)
     return Q_SUPER(&EOSConsole::Active);
 }
 
-QState EOSConsole::ChangeIsoMenu(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::ChangeIsoMenu(EOSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(2, menuUpDown);
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
                 return Q_TRAN(&EOSConsole::ChangeSettingsMenu);
-            
+
             case 2:
                 if (vlIso.GetSize() > 0)
                 {
-                    new_value = vlIso.GetNext(dpIso, 1); 
+                    new_value = vlIso.GetNext(dpIso, 1);
                     Eos.SetProperty(EOS_DPC_Iso, new_value);
                 }
                 return Q_HANDLED();
             case 1:
                 if (vlAperture.GetSize() > 0)
                 {
-                    new_value = vlIso.GetPrev(dpIso, 1); 
+                    new_value = vlIso.GetPrev(dpIso, 1);
                     Eos.SetProperty(EOS_DPC_Iso, new_value);
                 }
                 return Q_HANDLED();
@@ -292,33 +292,33 @@ QState EOSConsole::ChangeIsoMenu(EOSConsole *me, QEvent const *e)
     return Q_SUPER(&EOSConsole::Active);
 }
 
-QState EOSConsole::ChangePStyleMenu(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::ChangePStyleMenu(EOSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(2, menuUpDown);
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
                 return Q_TRAN(&EOSConsole::ChangeSettingsMenu);
-            
+
             case 2:
                 if (vlPictureStyle.GetSize() > 0)
                 {
-                    new_value = vlPictureStyle.GetNext(dpPStyle, 1); 
+                    new_value = vlPictureStyle.GetNext(dpPStyle, 1);
                     Eos.SetProperty(EOS_DPC_PictureStyle, new_value);
                 }
                 return Q_HANDLED();
             case 1:
                 if (vlPictureStyle.GetSize() > 0)
                 {
-                    new_value = vlPictureStyle.GetPrev(dpPStyle, 1); 
+                    new_value = vlPictureStyle.GetPrev(dpPStyle, 1);
                     Eos.SetProperty(EOS_DPC_PictureStyle, new_value);
                 }
                 return Q_HANDLED();
@@ -328,33 +328,33 @@ QState EOSConsole::ChangePStyleMenu(EOSConsole *me, QEvent const *e)
     return Q_SUPER(&EOSConsole::Active);
 }
 
-QState EOSConsole::ChangeExpCompMenu(EOSConsole *me, QEvent const *e) 
+QState EOSConsole::ChangeExpCompMenu(EOSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(2, menuUpDown);
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
                 return Q_TRAN(&EOSConsole::ChangeSettingsMenu);
-            
+
             case 2:
                 if (vlExpCompensation.GetSize() > 0)
                 {
-                    new_value = vlExpCompensation.GetNext(dpExpComp, 1); 
+                    new_value = vlExpCompensation.GetNext(dpExpComp, 1);
                     Eos.SetProperty(EOS_DPC_ExposureCompensation, new_value);
                 }
                 return Q_HANDLED();
             case 1:
                 if (vlExpCompensation.GetSize() > 0)
                 {
-                    new_value = vlExpCompensation.GetPrev(dpExpComp, 1); 
+                    new_value = vlExpCompensation.GetPrev(dpExpComp, 1);
                     Eos.SetProperty(EOS_DPC_ExposureCompensation, new_value);
                 }
                 return Q_HANDLED();
@@ -375,24 +375,24 @@ static TickEvt           tick_evt;
 //    Serial.begin( 115200 );
 //
 //    menu.init();                                // take the initial transition
-//    
+//
 //    tick_evt.sig = TICK_SIG;
 //    tick_evt.fine_time = 0;
 //}
 
 int8_t EOSConsole::MenuSelect()
 {
-    if( !Serial.available()) 
+    if( !Serial.available())
         return -1;
-      
+
     uint8_t  char_count = 0;
     uint8_t  index = 0;
-          
+
     while (Serial.available() > 0 && char_count < 2)
     {
         uint8_t key = Serial.read();
         key -= '0';
-                  
+
         if (index)
         {
 	    uint8_t tmp = index;
@@ -411,13 +411,13 @@ int8_t EOSConsole::MenuSelect()
 //{
 //    delay(100);                                            // 100 ms delay
 //
-//    if (++tick_evt.fine_time == 10) 
+//    if (++tick_evt.fine_time == 10)
 //        tick_evt.fine_time = 0;
 //
 //    menu.dispatch(&tick_evt);                       // dispatch TICK event
 //
 //    int8_t  index = MenuSelect();
-//    
+//
 //    if (index >= 0)
 //    {
 //        menu_sel_evt.sig         = MENU_SELECT_SIG;

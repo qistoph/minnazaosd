@@ -5,10 +5,10 @@ uint8_t              Screen::totalScreens    = 0;
 bool                 Screen::screenChanged   = true;
 
 Screen::Screen(const uint8_t num_items, ScreenItem *pItems) : numItems(num_items)
-{ 
+{
     screenItems = (ScreenItem*)pgm_read_word(pItems);
-    
-    if (totalScreens < MAX_SCREENS) 
+
+    if (totalScreens < MAX_SCREENS)
         screenPool2[totalScreens++] = this;
 };
 
@@ -22,7 +22,7 @@ void Screen::Set(uint8_t screen_id)
 {
     if (screen_id >= totalScreens)
         return;
-        
+
     currentScreen = screen_id;
     screenChanged = true;
 };

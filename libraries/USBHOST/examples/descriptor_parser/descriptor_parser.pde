@@ -3,7 +3,7 @@
 #include <Max3421e.h>
 #include <Usb.h>
 #include "descriptor_parser.h"
- 
+
 #define LOBYTE(x) ((char*)(&(x)))[0]
 #define HIBYTE(x) ((char*)(&(x)))[1]
 #define BUFSIZE 256    //buffer size
@@ -12,7 +12,7 @@
 #define getReportDescr( addr, ep, nbytes, parse_func, nak_limit ) ctrlXfer( addr, ep, bmREQ_HIDREPORT, USB_REQUEST_GET_DESCRIPTOR, 0x00, HID_DESCRIPTOR_REPORT, 0x0000, nbytes, parse_func, nak_limit )
 #define getReport( addr, ep, nbytes, interface, report_type, report_id, parse_func, nak_limit ) ctrlXfer( addr, ep, bmREQ_HIDIN, HID_REQUEST_GET_REPORT, report_id, report_type, interface, nbytes, parse_func, nak_limit )
 
-/* Foeward declarations */ 
+/* Foeward declarations */
 void setup();
 void loop();
 byte ctrlXfer( byte addr, byte ep, byte bmReqType, byte bRequest, byte wValLo, byte wValHi, unsigned int wInd, uint16_t nbytes, PARSE parse_func, uint16_t nak_limit );
@@ -28,7 +28,7 @@ typedef struct {
 
 MAX3421E Max;
 USB Usb;
- 
+
 void setup()
 {
   Serial.begin( 115200 );
@@ -36,7 +36,7 @@ void setup()
   Max.powerOn();
   delay( 200 );
 }
- 
+
 void loop()
 {
   uint8_t rcode;
@@ -49,7 +49,7 @@ void loop()
   /* printing device descriptor */
     printProgStr(PSTR("\r\nDevice addressed... "));
     printProgStr(PSTR("Requesting device descriptor."));
-    tmpbyte = getdevdescr( DEVADDR );                           //number of configurations, 0 if error   
+    tmpbyte = getdevdescr( DEVADDR );                           //number of configurations, 0 if error
     if( tmpbyte == 0 ) {
       printProgStr(PSTR("\r\nDevice descriptor cannot be retrieved. Program Halted\r\n"));
       while( 1 );           //stop
@@ -57,10 +57,10 @@ void loop()
      /* print configuration descriptors for all configurations */
      for( uint8_t i = 0; i < tmpbyte; i++ ) {
        getconfdescr( DEVADDR, i );
-     }   
+     }
   /* Stop */
       while( 1 );                          //stop
-  }    
+  }
 }
 
 /* Prints device descriptor. Returns number of configurations or zero if request error occured */
@@ -92,7 +92,7 @@ byte getdevdescr( byte addr )
   printProgStr( class_str );
   print_hex( buf.bDeviceClass, 8 );
   printProgStr( classname_parse( buf.bDeviceClass ));
-  //Device Subclass 
+  //Device Subclass
   printProgStr( subclass_str );
   print_hex( buf.bDeviceSubClass, 8 );
   //Device Protocol
@@ -151,7 +151,7 @@ byte getstrdescr( byte addr, byte idx )
     printProgStr(PSTR("\r\nError retrieving LangID table"));
     return( rcode );
   }
-  HIBYTE( langid ) = buf[ 3 ];                            //get first langid  
+  HIBYTE( langid ) = buf[ 3 ];                            //get first langid
   LOBYTE( langid ) = buf[ 2 ];                            //bytes are swapped to account for endiannes
   //printProgStr(PSTR("\r\nLanguage ID: "));
   //print_hex( langid, 16 );
@@ -162,7 +162,7 @@ byte getstrdescr( byte addr, byte idx )
   }
   length = ( buf[ 0 ] < 254 ? buf[ 0 ] : 254 );
   printProgStr(PSTR(" Length: "));
-  Serial.print( length, DEC ); 
+  Serial.print( length, DEC );
   rcode = Usb.getStrDescr( addr, 0, length, idx, langid, buf );
   if( rcode ) {
     printProgStr(PSTR("\r\nError retrieveing string"));
@@ -219,7 +219,7 @@ const char* classname_parse( byte class_number )
     default:
       return unk_msg;
   }//switch( class_number
-}            
+}
 /* Getting configuration descriptor */
 byte getconfdescr( byte addr, byte conf )
 {
@@ -269,7 +269,7 @@ byte getconfdescr( byte addr, byte conf )
         printunkdescr( buf_ptr );
         break;
         }//switch( descr_type
-    Serial.println("");    
+    Serial.println("");
     buf_ptr = ( buf_ptr + descr_length );    //advance buffer pointer
   }//while( buf_ptr <=...
   return( 0 );
@@ -450,7 +450,7 @@ void printunkdescr( char* descr_ptr )
 /* 01-0f    =   non-zero HRSLT  */
 byte ctrlXfer( byte addr, byte ep, byte bmReqType, byte bRequest, byte wValLo, byte wValHi, unsigned int wInd, uint16_t nbytes, PARSE parse_func, uint16_t nak_limit = USB_NAK_LIMIT )
 {
- byte rcode;   
+ byte rcode;
  SETUP_PKT sp;
  EP_RECORD* ep_rec = Usb.getDevTableEntry( addr, ep );
  byte pktsize;
@@ -470,7 +470,7 @@ byte ctrlXfer( byte addr, byte ep, byte bmReqType, byte bRequest, byte wValLo, b
   //Serial.println("Setup packet");   //DEBUG
   if( rcode ) {                                   //return HRSLT if not zero
       printProgStr(PSTR("\r\nSetup packet error: "));
-      Serial.print( rcode, HEX );                                          
+      Serial.print( rcode, HEX );
       return( rcode );
   }
   /* Data stage */
@@ -484,12 +484,12 @@ byte ctrlXfer( byte addr, byte ep, byte bmReqType, byte bRequest, byte wValLo, b
       Serial.print( rcode, HEX );
       return( rcode );
     }
-    /* check for RCVDAVIRQ and generate error if not present */ 
+    /* check for RCVDAVIRQ and generate error if not present */
     /* the only case when absense of RCVDAVIRQ makes sense is when toggle error occured. Need to add handling for that */
     if(( Max.regRd( rHIRQ ) & bmRCVDAVIRQ ) == 0 ) {
       printProgStr(PSTR("\r\nData Toggle error."));
-      return ( 0xf0 );                            
-    }    
+      return ( 0xf0 );
+    }
     pktsize = Max.regRd( rRCVBC );  //get received bytes count
     parse_func( pktsize );          //call parse function. Parse is expected to read the FIFO completely
     Max.regWr( rHIRQ, bmRCVDAVIRQ );                    // Clear the IRQ & free the buffer
@@ -504,7 +504,7 @@ byte ctrlXfer( byte addr, byte ep, byte bmReqType, byte bRequest, byte wValLo, b
   rcode = Usb.dispatchPkt( tokOUTHS, ep, nak_limit );
   if( rcode ) {   //return error
     printProgStr(PSTR("Status packet error: "));
-    Serial.print( rcode, HEX );                                          
+    Serial.print( rcode, HEX );
   }
   return( rcode );
 }
@@ -547,7 +547,7 @@ void HIDreport_parse( uint8_t pkt_size )
      switch( state ) {
       case ITEM_START:  //start of the record
         prefix = byte_toparse >>2;        //store prefix for databyte parsing
-        tmpbyte = byte_toparse & B_SIZE; 
+        tmpbyte = byte_toparse & B_SIZE;
         /* get item length */
         ( tmpbyte == 0x03 ) ? databytes_left = 4 : databytes_left = tmpbyte;
          if( databytes_left ) {
@@ -568,7 +568,7 @@ void HIDreport_parse( uint8_t pkt_size )
                printProgStr(PSTR("Invalid Tag"));
              }
              else if( tmpbyte > 0x0c ) {
-               printProgStr( reserved_msg ); 
+               printProgStr( reserved_msg );
              }
              else {
                printProgStr((char*)pgm_read_word(&maintags[ tmpbyte - 8 /* & 0x03 */]));
@@ -583,8 +583,8 @@ void HIDreport_parse( uint8_t pkt_size )
              ( tmpbyte > 0x0a ) ? printProgStr( reserved_msg ) : printProgStr((char*)pgm_read_word(&localtags[ tmpbyte ]));
              break;//case 2 Local
            default:
-             break;  
-         }//switch( bType...        
+             break;
+         }//switch( bType...
          break;//case ITEM_START
        case DATA_PARSE:
          switch( prefix ) {
@@ -604,11 +604,11 @@ void HIDreport_parse( uint8_t pkt_size )
              else {
                printProgStr((char*)pgm_read_word(&collections[ byte_toparse ]));
              }
-             break;//case 0x28 Main Collection           
+             break;//case 0x28 Main Collection
            //case 0x30: //Main End Collection
            case 0x01:    //Global Usage Page
              switch( byte_toparse ) {  //see HID Usage Tables doc v.1.12 page 14
-               case 0x00:              
+               case 0x00:
                case 0x01:
                case 0x02:
                case 0x03:
@@ -660,16 +660,16 @@ void HIDreport_parse( uint8_t pkt_size )
                case 0x90:
                  printProgStr(PSTR("Camera Control Page"));
                  break;
-               case 0x91: 
+               case 0x91:
                  printProgStr(PSTR("Arcade Page"));
-                 break;                
+                 break;
              default:
 //               printProgStr(PSTR("Data: "));
 //               print_hex( byte_toparse, 8 );
                //databytes_left--;
-               break;           
+               break;
              }//switch case 0x01:    //Global Usage Page
-         }//switch( prefix ...         
+         }//switch( prefix ...
          printProgStr(PSTR("  Data: "));
          print_hex( byte_toparse, 8 );
          databytes_left--;
@@ -686,12 +686,12 @@ void HIDreport_parse( uint8_t pkt_size )
 void print_hex(int v, int num_places)
 {
   int mask=0, n, num_nibbles, digit;
- 
+
   for (n=1; n<=num_places; n++) {
     mask = (mask << 1) | 0x0001;
   }
   v = v & mask; // truncate v to specified number of places
- 
+
   num_nibbles = num_places / 4;
   if ((num_places % 4) != 0) {
     ++num_nibbles;
@@ -699,7 +699,7 @@ void print_hex(int v, int num_places)
   do {
     digit = ((v >> (num_nibbles-1) * 4)) & 0x0f;
     Serial.print(digit, HEX);
-  } 
+  }
   while(--num_nibbles);
 }
 
@@ -709,7 +709,7 @@ void print_hex(int v, int num_places)
 /* printProgStr((char*)pgm_read_word(&mtpopNames[(op & 0xFF)]));   */
 void printProgStr(const char* str)
 {
-  if(!str) { 
+  if(!str) {
     return;
   }
   char c;

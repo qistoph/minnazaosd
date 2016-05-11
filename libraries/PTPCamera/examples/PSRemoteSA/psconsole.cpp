@@ -5,7 +5,7 @@
 extern CanonPS                 Ps;
 
 /* fixes avr-gcc incompatibility with virtual destructors */
-void operator delete( void *p ) {} 
+void operator delete( void *p ) {}
 
 const char* menuMain[] = {"Capture", "View Settings", "Change Settings", "Viewfinder On", "Viewfinder Off"};
 const char* menuChangeSettings[] = {"Mode", "Aperture", "Shutter Speed", "WB", "ISO", "Exp Comp", "CamOutput", "Zoom"};
@@ -68,10 +68,10 @@ void PrintZoom()
 {
     uint16_t    val = 0;
     Notify(PSTR("Zoom:"));
-    
+
     if (Ps.GetDevicePropValue(PS_DPC_Zoom, (uint16_t&)val) == PTP_RC_OK)
-        PrintHex<uint16_t>(val); 
-        
+        PrintHex<uint16_t>(val);
+
     Notify(PSTR("\r\n"));
 }
 
@@ -87,32 +87,32 @@ void PSConsole::ShowParams()
     PrintZoom();
 }
 
-QState PSConsole::Initial(PSConsole *me, QEvent const *e) 
+QState PSConsole::Initial(PSConsole *me, QEvent const *e)
 {
     return Q_TRAN(&PSConsole::Inactive);
 }
 
-QState PSConsole::Inactive(PSConsole *me, QEvent const *e) 
+QState PSConsole::Inactive(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
-        case Q_ENTRY_SIG: 
+        case Q_ENTRY_SIG:
             Notify(PSTR("Inactive\r\n"));
             return Q_HANDLED();
-        case TICK_SIG: 
+        case TICK_SIG:
             return Q_TRAN(&PSConsole::Active);
     }
     return Q_SUPER(QHsm::top);
 }
 
-QState PSConsole::Active(PSConsole *me, QEvent const *e) 
+QState PSConsole::Active(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
-        case Q_ENTRY_SIG: 
+        case Q_ENTRY_SIG:
             Notify(PSTR("Active\r\n"));
             return Q_HANDLED();
-        case Q_INIT_SIG: 
+        case Q_INIT_SIG:
             return Q_TRAN(&PSConsole::MainMenu);
         case TICK_SIG:
             return Q_TRAN(&PSConsole::Inactive);
@@ -127,7 +127,7 @@ void PSConsole::PrintMenuTitles(uint8_t count, const char **menu)
     {
         Serial.print(i, DEC);
         Serial.print(". ");
-        
+
         if (i == 0)
             Serial.println("<..>");
         else
@@ -136,14 +136,14 @@ void PSConsole::PrintMenuTitles(uint8_t count, const char **menu)
     Serial.println("");
 }
 
-QState PSConsole::MainMenu(PSConsole *me, QEvent const *e) 
+QState PSConsole::MainMenu(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(MAIN_MENU_COUNT, menuMain);
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             switch (((MenuSelectEvt*)e)->item_index)
             {
@@ -172,14 +172,14 @@ QState PSConsole::MainMenu(PSConsole *me, QEvent const *e)
     return Q_SUPER(&PSConsole::Active);
 }
 
-QState PSConsole::ChangeSettingsMenu(PSConsole *me, QEvent const *e) 
+QState PSConsole::ChangeSettingsMenu(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(CHSET_MENU_COUNT, menuChangeSettings);
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             switch (((MenuSelectEvt*)e)->item_index)
             {
@@ -207,18 +207,18 @@ QState PSConsole::ChangeSettingsMenu(PSConsole *me, QEvent const *e)
     return Q_SUPER(&PSConsole::Active);
 }
 
-QState PSConsole::ChangeModeMenu(PSConsole *me, QEvent const *e) 
+QState PSConsole::ChangeModeMenu(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(UPDWN_MENU_COUNT, menuUpDown);
             PrintMode();
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
@@ -237,18 +237,18 @@ QState PSConsole::ChangeModeMenu(PSConsole *me, QEvent const *e)
     return Q_SUPER(&PSConsole::Active);
 }
 
-QState PSConsole::ChangeApertureMenu(PSConsole *me, QEvent const *e) 
+QState PSConsole::ChangeApertureMenu(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(UPDWN_MENU_COUNT, menuUpDown);
             PrintAperture();
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
@@ -267,18 +267,18 @@ QState PSConsole::ChangeApertureMenu(PSConsole *me, QEvent const *e)
     return Q_SUPER(&PSConsole::Active);
 }
 
-QState PSConsole::ChangeShutterSpeedMenu(PSConsole *me, QEvent const *e) 
+QState PSConsole::ChangeShutterSpeedMenu(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(UPDWN_MENU_COUNT, menuUpDown);
             PrintShutterSpeed();
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
@@ -297,23 +297,23 @@ QState PSConsole::ChangeShutterSpeedMenu(PSConsole *me, QEvent const *e)
     return Q_SUPER(&PSConsole::Active);
 }
 
-QState PSConsole::ChangeWBMenu(PSConsole *me, QEvent const *e) 
+QState PSConsole::ChangeWBMenu(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(UPDWN_MENU_COUNT, menuUpDown);
             PrintWB();
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
                 return Q_TRAN(&PSConsole::ChangeSettingsMenu);
-            
+
             case 2:
                 StepUp<uint8_t>((PTP*)&Ps, PS_DPC_WhiteBalance);
                 PrintWB();
@@ -328,18 +328,18 @@ QState PSConsole::ChangeWBMenu(PSConsole *me, QEvent const *e)
     return Q_SUPER(&PSConsole::Active);
 }
 
-QState PSConsole::ChangeIsoMenu(PSConsole *me, QEvent const *e) 
+QState PSConsole::ChangeIsoMenu(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(UPDWN_MENU_COUNT, menuUpDown);
             PrintIso();
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
@@ -358,18 +358,18 @@ QState PSConsole::ChangeIsoMenu(PSConsole *me, QEvent const *e)
     return Q_SUPER(&PSConsole::Active);
 }
 
-QState PSConsole::ChangeExpCompMenu(PSConsole *me, QEvent const *e) 
+QState PSConsole::ChangeExpCompMenu(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(UPDWN_MENU_COUNT, menuUpDown);
             PrintExpCompensation();
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             uint8_t new_value;
-            
+
             switch (((MenuSelectEvt*)e)->item_index)
             {
             case 0:
@@ -388,15 +388,15 @@ QState PSConsole::ChangeExpCompMenu(PSConsole *me, QEvent const *e)
     return Q_SUPER(&PSConsole::Active);
 }
 
-QState PSConsole::ChangeCamOutputMenu(PSConsole *me, QEvent const *e) 
+QState PSConsole::ChangeCamOutputMenu(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(UPDWN_MENU_COUNT, menuUpDown);
             PrintCamOutput();
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             switch (((MenuSelectEvt*)e)->item_index)
             {
@@ -416,15 +416,15 @@ QState PSConsole::ChangeCamOutputMenu(PSConsole *me, QEvent const *e)
     return Q_SUPER(&PSConsole::Active);
 }
 
-QState PSConsole::ChangeZoomMenu(PSConsole *me, QEvent const *e) 
+QState PSConsole::ChangeZoomMenu(PSConsole *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
         case Q_ENTRY_SIG:
             PrintMenuTitles(UPDWN_MENU_COUNT, menuUpDown);
             PrintZoom();
             return Q_HANDLED();
-        case MENU_SELECT_SIG: 
+        case MENU_SELECT_SIG:
         {
             switch (((MenuSelectEvt*)e)->item_index)
             {
@@ -448,17 +448,17 @@ static TickEvt     tick_evt;
 
 int8_t PSConsole::MenuSelect()
 {
-    if( !Serial.available()) 
+    if( !Serial.available())
         return -1;
-      
+
     uint8_t  char_count = 0;
     uint8_t  index = 0;
-          
+
     while (Serial.available() > 0 && char_count < 2)
     {
         uint8_t key = Serial.read();
         key -= '0';
-                  
+
         if (index)
         {
 	    uint8_t tmp = index;

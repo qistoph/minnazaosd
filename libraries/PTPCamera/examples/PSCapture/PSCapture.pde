@@ -29,10 +29,10 @@ void loop();
 class CamStateHandlers : public PSStateHandlers
 {
       bool stateConnected;
-    
+
 public:
       CamStateHandlers() : stateConnected(false) {};
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 } CamStates;
@@ -47,7 +47,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
         eventTimer.Disable();
         captureTimer.Disable();
         stateConnected = false;
-        
+
         Notify(PSTR("Camera disconnected\r\n"));
     }
 }
@@ -57,14 +57,14 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (!stateConnected)
     {
         Notify(PSTR("stateConnected\r\n"));
-        
+
         stateConnected = true;
         eventTimer.Enable();
         captureTimer.Enable();
     }
 }
 
-void setup() 
+void setup()
 {
   Serial.begin( 115200 );
   Serial.println("Start");
@@ -74,7 +74,7 @@ void setup()
   delay( 200 );
 }
 
-void loop() 
+void loop()
 {
     eventTimer.Run();
     captureTimer.Run();
@@ -84,9 +84,9 @@ void loop()
 void OnCaptureTimer()
 {
     Ps.SetDevicePropValue(PS_DPC_CaptureTransferMode, (uint16_t)0x0D);
-            
+
     uint16_t rc = Ps.Capture();
-    
+
     if (rc != PTP_RC_OK)
         Message(PSTR("Error: "), rc);
 }
@@ -95,7 +95,7 @@ void OnEventTimer()
 {
     PSEventParser  prs;
     Ps.EventCheck(&prs);
-    
+
     if (uint32_t handle = prs.GetObjHandle())
     {
                 PTPObjInfoParser     inf;

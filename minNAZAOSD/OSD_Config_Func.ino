@@ -21,7 +21,7 @@ boolean getBit(byte Reg, byte whichBit) {
 byte setBit(byte &Reg, byte whichBit, boolean stat) {
     if (stat) {
         Reg = Reg | (1 << whichBit);
-    } 
+    }
     else {
         Reg = Reg & ~(1 << whichBit);
     }
@@ -53,17 +53,17 @@ void InitializeOSD() {
 
     osd.setPanel(4,9);
     osd.openPanel();
-    osd.printf_P(PSTR("OSD Initialized, reboot")); 
+    osd.printf_P(PSTR("OSD Initialized, reboot"));
     osd.closePanel();
 
-    // run for ever so user resets 
+    // run for ever so user resets
     for(;;) {}
 
 }
 
 // Write our latest FACTORY settings to EEPROM
 void writeSettings() {
-    // Writing all default parameters to EEPROM, ON = panel enabled  
+    // Writing all default parameters to EEPROM, ON = panel enabled
     // All panels have 3 values:
     //  - Enable/Disable
     //  - X coordinate on screen
@@ -134,10 +134,10 @@ void writeSettings() {
     writeEEPROM(3,  panVel_y_ADDR + offset);
     writeEEPROM(on, panAirSpeed_en_ADDR + offset);
     writeEEPROM(2,  panAirSpeed_x_ADDR + offset);
-    writeEEPROM(3,  panAirSpeed_y_ADDR + offset); 
+    writeEEPROM(3,  panAirSpeed_y_ADDR + offset);
     writeEEPROM(on, panBatteryPercent_en_ADDR + offset);
     writeEEPROM(2,  panBatteryPercent_x_ADDR + offset);
-    writeEEPROM(3,  panBatteryPercent_y_ADDR + offset); 
+    writeEEPROM(3,  panBatteryPercent_y_ADDR + offset);
     writeEEPROM(on, panTime_en_ADDR + offset);
     writeEEPROM(2,  panTime_x_ADDR + offset);
     writeEEPROM(3,  panTime_y_ADDR + offset);
@@ -181,7 +181,7 @@ void readSettings() {
     overspeed = EEPROM.read(overspeed_ADDR);
     stall = EEPROM.read(stall_ADDR);
     battv = EEPROM.read(battv_ADDR);
-    
+
     switch_mode = EEPROM.read(switch_mode_ADDR);
 //    pal_ntsc = EEPROM.read(pal_ntsc_ADDR);
 //    if (EEPROM.read(ch_toggle_ADDR) < 4 || EEPROM.read(ch_toggle_ADDR) > 8){
@@ -198,7 +198,7 @@ void readSettings() {
 
     batt_warn_level = EEPROM.read(OSD_BATT_WARN_ADDR);
     rssi_warn_level = EEPROM.read(OSD_RSSI_WARN_ADDR);
-    
+
 // JRChange: Flight Batt on MinimOSD:
     volt_div_ratio = EEPROM.read(volt_div_ratio_ADDR) + (EEPROM.read(volt_div_ratio_ADDR+1) << 8);
     curr_amp_per_volt = EEPROM.read(curr_amp_per_volt_ADDR) + (EEPROM.read(curr_amp_per_volt_ADDR+1) << 8);
@@ -345,11 +345,11 @@ void readPanelSettings() {
     //setBit(panD_REG[panel], Setup_BIT, readEEPROM(panSetup_en_ADDR));
     //panSetup_XY[0] = readEEPROM(panSetup_x_ADDR);
     //panSetup_XY[1] = checkPAL(readEEPROM(panSetup_y_ADDR));
-    
+
     setBit(panD_REG[panel], RSSI_BIT, readEEPROM(panRSSI_en_ADDR + offset));
     panRSSI_XY[0][panel] = readEEPROM(panRSSI_x_ADDR + offset);
     panRSSI_XY[1][panel] = checkPAL(readEEPROM(panRSSI_y_ADDR + offset));
-    
+
     setBit(panE_REG[panel], DIST_BIT, readEEPROM(panDistance_en_ADDR + offset));
     panDistance_XY[0][panel] = readEEPROM(panDistance_x_ADDR + offset);
     panDistance_XY[1][panel] = checkPAL(readEEPROM(panDistance_y_ADDR + offset));
@@ -373,7 +373,7 @@ void updateSettings(byte panelu, byte panel_x, byte panel_y, byte panel_s ) {
         osd.clear();
         readSettings();
         for(panel = 0; panel < npanels; panel++) readPanelSettings();
-    } 
+    }
 }
 
 

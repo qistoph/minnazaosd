@@ -2,14 +2,14 @@
 #include "expcomp_macro.h"
 
 /* fixes avr-gcc incompatibility with virtual destructors */
-void operator delete( void *p ) {} 
+void operator delete( void *p ) {}
 
-QState HDRCapture::Initial(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::Initial(HDRCapture *me, QEvent const *e)
 {
     return Q_TRAN(&HDRCapture::Inactive);
 }
 
-QState HDRCapture::Inactive(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::Inactive(HDRCapture *me, QEvent const *e)
 {
     switch(e->sig)
     {
@@ -39,9 +39,9 @@ QState HDRCapture::Inactive(HDRCapture *me, QEvent const *e)
     return Q_SUPER(&QHsm::top);
 }
 
-QState HDRCapture::Active(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::Active(HDRCapture *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
     case Q_ENTRY_SIG:
         PTPTRACE("Active\r\n");
@@ -80,20 +80,20 @@ QState HDRCapture::Active(HDRCapture *me, QEvent const *e)
     case TIMEOUT_SIG:
         PTPTRACE("::TIMEOUT_SIG\r\n");
         return Q_TRAN(me->activeHistory);
-    case PTP_RC_OK_SIG: 
+    case PTP_RC_OK_SIG:
         PTPTRACE("::PTP_RC_OK_SIG\r\n");
         return Q_TRAN(me->activeHistory);
-    case TICK_MILLIS_SIG: 
+    case TICK_MILLIS_SIG:
         PTPTRACE("::TICK_MILLIS_SIG\r\n");
         return Q_HANDLED();
     }
     return Q_SUPER(&QHsm::top);
 }
 
-QState HDRCapture::SaveSettings(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::SaveSettings(HDRCapture *me, QEvent const *e)
 {
     static bool bSaved = false;
-    switch (e->sig) 
+    switch (e->sig)
     {
     case Q_ENTRY_SIG:
         PTPTRACE("SaveSettings\r\n");
@@ -106,7 +106,7 @@ QState HDRCapture::SaveSettings(HDRCapture *me, QEvent const *e)
     case PTP_RC_OK_SIG:
         PTPTRACE("PTP_RC_OK_SIG\r\n");
         if (me->selfTimeout)
-        { 
+        {
             me->theQueue.Push((QEvent*)e);
             return Q_TRAN(&HDRCapture::SelfTimer);
         }
@@ -115,15 +115,15 @@ QState HDRCapture::SaveSettings(HDRCapture *me, QEvent const *e)
     return Q_SUPER(&HDRCapture::Active);
 }
 
-QState HDRCapture::SelfTimer(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::SelfTimer(HDRCapture *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
     case Q_ENTRY_SIG:
         PTPTRACE("SelfTimer\r\n");
         me->activeHistory = (QStateHandler)&SelfTimer;
         return Q_HANDLED();
-    case TICK_MILLIS_SIG: 
+    case TICK_MILLIS_SIG:
         PTPTRACE("TICK_MILLIS_SIG\r\n");
         return Q_TRAN(&HDRCapture::PreCapture);
     case PTP_RC_OK_SIG:
@@ -139,9 +139,9 @@ QState HDRCapture::SelfTimer(HDRCapture *me, QEvent const *e)
     return Q_SUPER(&HDRCapture::Active);
 }
 
-QState HDRCapture::RestoreSettings(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::RestoreSettings(HDRCapture *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
     case Q_ENTRY_SIG:
         PTPTRACE("RestoreSettings\r\n");
@@ -155,33 +155,33 @@ QState HDRCapture::RestoreSettings(HDRCapture *me, QEvent const *e)
     return Q_SUPER(&HDRCapture::Active);
 }
 
-QState HDRCapture::PreCapture(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::PreCapture(HDRCapture *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
     case Q_ENTRY_SIG:
         PTPTRACE("PreCapture\r\n");
         me->activeHistory = (QStateHandler)&PreCapture;
         return Q_HANDLED();
-    case TICK_MILLIS_SIG: 
+    case TICK_MILLIS_SIG:
         PTPTRACE("TICK_MILLIS_SIG\r\n");
-        
+
         if (!me->bktCntdn)
         {
-            me->bktCntdn = (me->bktStep) ? (me->bktPositive - me->bktNegative) / me->bktStep + 1 : 1;     
+            me->bktCntdn = (me->bktStep) ? (me->bktPositive - me->bktNegative) / me->bktStep + 1 : 1;
             me->bktPos = me->bktNegative;
         }
         if (me->bktStep)
             return Q_TRAN(&HDRCapture::ExpCompSet);
-        
+
         return Q_TRAN(&HDRCapture::Capture);
     } // switch
     return Q_SUPER(&HDRCapture::Active);
 }
 
-QState HDRCapture::Capture(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::Capture(HDRCapture *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
     case Q_ENTRY_SIG:
         PTPTRACE("Capture\r\n");
@@ -197,25 +197,25 @@ QState HDRCapture::Capture(HDRCapture *me, QEvent const *e)
     return Q_SUPER(&HDRCapture::Active);
 }
 
-QState HDRCapture::PostCapture(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::PostCapture(HDRCapture *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
     case Q_ENTRY_SIG:
         PTPTRACE("PostCapture\r\n");
         me->activeHistory = (QStateHandler)&PostCapture;
         return Q_HANDLED();
-    case TICK_MILLIS_SIG: 
+    case TICK_MILLIS_SIG:
         PTPTRACE("TICK_MILLIS_SIG\r\n");
 
         if (!me->bktCntdn)
             return Q_TRAN(&HDRCapture::PreCapture);
 
-        me->bktPos += me->bktStep;                
-        
+        me->bktPos += me->bktStep;
+
         if (--me->bktCntdn == 0)
         {
-            --me->frmCntdn;            
+            --me->frmCntdn;
             me->OnFrameCaptured(me->frmCntdn);
         }
         me->OnBktFrameCaptured(me->bktCntdn);
@@ -230,7 +230,7 @@ QState HDRCapture::PostCapture(HDRCapture *me, QEvent const *e)
         if (me->bktCntdn)
             return Q_TRAN(&HDRCapture::PreCapture);
 
-        // if it was the last frame in bracketing            
+        // if it was the last frame in bracketing
         me->toEvt.timeout = me->frameTimeout;
         me->toEvt.attribs = TA_INTR_TIMER;
         me->theQueue.Push(&me->toEvt);
@@ -242,13 +242,13 @@ QState HDRCapture::PostCapture(HDRCapture *me, QEvent const *e)
     return Q_SUPER(&HDRCapture::Active);
 }
 
-QState HDRCapture::ExpCompSet(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::ExpCompSet(HDRCapture *me, QEvent const *e)
 {
-    switch (e->sig) 
+    switch (e->sig)
     {
     case Q_ENTRY_SIG:
         PTPTRACE("ExpCompSet\r\n");
-        me->activeHistory = (QStateHandler)&ExpCompSet; 
+        me->activeHistory = (QStateHandler)&ExpCompSet;
         me->rcEvt.rc = me->Eos.SetProperty(EOS_DPC_ExposureCompensation, EXP_COMP_VALUE(me->bktPos));
 //        me->rcEvt.rc = PTP_RC_OK;
         me->theQueue.Push(&me->rcEvt);
@@ -260,15 +260,15 @@ QState HDRCapture::ExpCompSet(HDRCapture *me, QEvent const *e)
     return Q_SUPER(&HDRCapture::Active);
 }
 
-QState HDRCapture::Timeout(HDRCapture *me, QEvent const *e) 
+QState HDRCapture::Timeout(HDRCapture *me, QEvent const *e)
 {
     static uint32_t timeout = 0;
     static uint32_t local_time = 0;
     static uint32_t seconds_left = 0;
     static uint8_t  attribs = 0;
     static uint16_t sec_cntdn = 1000;
-    
-    switch (e->sig) 
+
+    switch (e->sig)
     {
     case Q_ENTRY_SIG:
         PTPTRACE("Timeout\r\n");
@@ -276,12 +276,12 @@ QState HDRCapture::Timeout(HDRCapture *me, QEvent const *e)
     case SET_TIMEOUT_SIG:
         attribs = ((SetTimeoutEvt*)e)->attribs;
         timeout = (attribs & 0x01) ? ((SetTimeoutEvt*)e)->timeout * 1000 : ((SetTimeoutEvt*)e)->timeout;
-        
+
         if (attribs & 0x01)
         {
             seconds_left = ((SetTimeoutEvt*)e)->timeout;
             sec_cntdn = 1000;
-            
+
             switch (attribs)
             {
             case TA_SELF_TIMER:
@@ -294,24 +294,24 @@ QState HDRCapture::Timeout(HDRCapture *me, QEvent const *e)
 //                    me->OnBulbTimerProgress(seconds_left);
 //                    break;
             }  // switch
-        }    
+        }
         local_time = millis();
         return Q_HANDLED();
-    case TICK_MILLIS_SIG: 
+    case TICK_MILLIS_SIG:
         uint32_t dt = local_time;
         local_time = millis();
         dt = local_time - dt;
         timeout = (timeout < dt) ? 0 : timeout - dt;
 
-        if (attribs & 1) 
+        if (attribs & 1)
         {
             bool bTick = (sec_cntdn <= dt);
             sec_cntdn = (sec_cntdn > dt) ? sec_cntdn - dt : 1000 - dt;
-            
+
             if (bTick)
             {
                 seconds_left --;
-                
+
                 switch (attribs)
                 {
                 case TA_SELF_TIMER:
@@ -323,7 +323,7 @@ QState HDRCapture::Timeout(HDRCapture *me, QEvent const *e)
                 }  // switch
             } // if (--sec_cntdn == 0)
         } // if (attribs & 1)
-        
+
         if (!timeout)
         {
             me->qpEvt.sig = TIMEOUT_SIG;

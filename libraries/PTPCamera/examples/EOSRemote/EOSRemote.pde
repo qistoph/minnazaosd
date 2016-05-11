@@ -49,12 +49,12 @@ class CamStateHandlers : public EOSStateHandlers
 {
       enum CamStates { stInitial, stDisconnected, stConnected };
       CamStates stateConnected;
-    
+
 public:
-      CamStateHandlers() : stateConnected(stInitial) 
+      CamStateHandlers() : stateConnected(stInitial)
       {
       };
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 };
@@ -81,7 +81,7 @@ void CamStateHandlers::OnDeviceDisconnectedState(PTP *ptp)
         stateConnected = stDisconnected;
         PTPPollTimer.Disable();
         Notify(PSTR("Camera disconnected.\r\n"));
-        
+
         if (stateConnected == stConnected)
             eosConsole.dispatch(&evtTick);
     }
@@ -96,7 +96,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         eosConsole.dispatch(&evtTick);
     }
     int8_t  index = eosConsole.MenuSelect();
-    
+
     if (index >= 0)
     {
         MenuSelectEvt     menu_sel_evt;
@@ -124,13 +124,13 @@ void setup()
     Serial.begin(115200);
     Eos.Setup();
     delay( 200 );
-  
+
     PTPPollTimer.Set(OnPTPPollTimer, 300);
-    
+
     // 1ms is the perfect interval for encoder polling
     ControlTimer.Set(OnControlTimer, 1);
     ControlTimer.Enable();
-  
+
     evtTick.sig = TICK_SIG;
 //    evtAbort.sig = ABORT_SIG;
     eosConsole.init();

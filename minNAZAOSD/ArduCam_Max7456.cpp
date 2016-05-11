@@ -68,7 +68,7 @@ void OSD::detectMode()
 //    byte osdstat_r = Spi.transfer(0xff);
 
 //    if ((B00000001 & osdstat_r) == 1){
-//        setMode(1);  
+//        setMode(1);
 //    }
 //    else if((B00000010 & osdstat_r) == 1){
         setMode(0);
@@ -82,7 +82,7 @@ void OSD::detectMode()
     if (EEPROM.read(PAL_NTSC_ADDR) == 1){
         setMode(1);
         digitalWrite(MAX7456_SELECT,LOW);
-    } 
+    }
     else setMode(0);
     digitalWrite(MAX7456_SELECT,LOW);
 }
@@ -159,10 +159,10 @@ void
 OSD::openPanel(void){
   unsigned int linepos;
   byte settings, char_address_hi, char_address_lo;
- 
+
   //find [start address] position
   linepos = row*30+col;
-  
+
   // divide 16 bits into hi & lo byte
   char_address_hi = linepos >> 8;
   char_address_lo = linepos;
@@ -185,7 +185,7 @@ OSD::openPanel(void){
 //------------------ close panel ---------------------------------------------
 
 void
-OSD::closePanel(void){  
+OSD::closePanel(void){
   Spi.transfer(MAX7456_DMDI_reg);
   Spi.transfer(MAX7456_END_string); //This is needed "trick" to finish auto increment
   digitalWrite(MAX7456_SELECT,HIGH);
@@ -199,16 +199,16 @@ void
 OSD::openSingle(uint8_t x, uint8_t y){
   unsigned int linepos;
   byte char_address_hi, char_address_lo;
- 
+
   //find [start address] position
   linepos = y*30+x;
-  
+
   // divide 16 bits into hi & lo byte
   char_address_hi = linepos >> 8;
   char_address_lo = linepos;
-  
+
   digitalWrite(MAX7456_SELECT,LOW);
-  
+
   Spi.transfer(MAX7456_DMAH_reg); // set start address high
   Spi.transfer(char_address_hi);
 
@@ -245,13 +245,13 @@ OSD::control(uint8_t ctrl){
     case 1:
       //Spi.transfer((MAX7456_ENABLE_display_vert | video_mode) | MAX7456_SYNC_internal);
       //Spi.transfer((MAX7456_ENABLE_display_vert | video_mode) | MAX7456_SYNC_external);
-      Spi.transfer((MAX7456_ENABLE_display_vert | video_mode) | MAX7456_SYNC_autosync); 
+      Spi.transfer((MAX7456_ENABLE_display_vert | video_mode) | MAX7456_SYNC_autosync);
       break;
   }
   digitalWrite(MAX7456_SELECT,HIGH);
 }
 
-void 
+void
 OSD::write_NVM(int font_count, uint8_t *character_bitmap)
 {
   byte x;
@@ -260,11 +260,11 @@ OSD::write_NVM(int font_count, uint8_t *character_bitmap)
 
   char_address_hi = font_count;
   char_address_lo = 0;
- //Serial.println("write_new_screen");   
+ //Serial.println("write_new_screen");
 
   // disable display
   digitalWrite(MAX7456_SELECT,LOW);
-  Spi.transfer(MAX7456_VM0_reg); 
+  Spi.transfer(MAX7456_VM0_reg);
   Spi.transfer(MAX7456_DISABLE_display);
 
   Spi.transfer(MAX7456_CMAH_reg); // set start address high
@@ -282,13 +282,13 @@ OSD::write_NVM(int font_count, uint8_t *character_bitmap)
   // transfer a 54 bytes from shadow ram to NVM
   Spi.transfer(MAX7456_CMM_reg);
   Spi.transfer(WRITE_nvr);
-  
+
   // wait until bit 5 in the status register returns to 0 (12ms)
   while ((Spi.transfer(MAX7456_STAT_reg_read) & STATUS_reg_nvr_busy) != 0x00);
 
   Spi.transfer(MAX7456_VM0_reg); // turn on screen next vertical
   Spi.transfer(MAX7456_ENABLE_display_vert);
-  digitalWrite(MAX7456_SELECT,HIGH);  
+  digitalWrite(MAX7456_SELECT,HIGH);
 }
 
 //------------------ pure virtual ones (just overriding) ---------------------

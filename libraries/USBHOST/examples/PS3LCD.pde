@@ -9,7 +9,7 @@
 #include <avr/pgmspace.h>
 
 /*The application will work in reduced host mode, so we can save program and data
-memory space. After verifying the PID and VID we will use known values for the 
+memory space. After verifying the PID and VID we will use known values for the
 configuration values for device, interface, endpoints and HID */
 
 /* PS3 data taken from descriptors */
@@ -22,7 +22,7 @@ configuration values for device, interface, endpoints and HID */
 #define PS3_IF          0
 #define PS3_NUM_EP      3
 #define EP_MAXPKTSIZE   64
-#define EP_INTERRUPT    0x03 
+#define EP_INTERRUPT    0x03
 #define EP_POLL         0x01
 #define CONTROL_EP      0
 #define OUTPUT_EP       1
@@ -32,7 +32,7 @@ configuration values for device, interface, endpoints and HID */
 #define PS3_F4_REPORT_LEN 4
 #define PS3_F5_REPORT_LEN 8
 #define PS3_01_REPORT_LEN 48
-#define HID_REPORT_FEATURE 3 
+#define HID_REPORT_FEATURE 3
 #define HID_REPORT_OUTPUT  2
 #define PS3_F4_REPORT_ID  0xF4
 #define PS3_01_REPORT_ID  0x01
@@ -102,7 +102,7 @@ configuration values for device, interface, endpoints and HID */
 */
 
 prog_char menutext_0[] PROGMEM = "Select Test";
-prog_char menutext_1[] PROGMEM = "Basic Tests";  
+prog_char menutext_1[] PROGMEM = "Basic Tests";
 prog_char menutext_2[] PROGMEM = "Buttons Test";
 prog_char menutext_3[] PROGMEM = "Joystick Test";
 prog_char menutext_4[] PROGMEM = "Pressure Test";
@@ -112,8 +112,8 @@ prog_char menutext_7[] PROGMEM = "Bluetooth Addr";
 prog_char menutext_8[] PROGMEM = "Free Memory";
 
 
-PROGMEM const char *menu_table[] = 	  
-{   
+PROGMEM const char *menu_table[] =
+{
   menutext_0,
   menutext_1,
   menutext_2,
@@ -125,9 +125,9 @@ PROGMEM const char *menu_table[] =
   menutext_8 };
 
 prog_char output_01_report[] PROGMEM = {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
-                                     0x00, 0x02, 0xff, 0x27, 0x10, 0x00, 0x32, 0xff, 
-                                     0x27, 0x10, 0x00, 0x32, 0xff, 0x27, 0x10, 0x00, 
-                                     0x32, 0xff, 0x27, 0x10, 0x00, 0x32, 0x00, 0x00, 
+                                     0x00, 0x02, 0xff, 0x27, 0x10, 0x00, 0x32, 0xff,
+                                     0x27, 0x10, 0x00, 0x32, 0xff, 0x27, 0x10, 0x00,
+                                     0x32, 0xff, 0x27, 0x10, 0x00, 0x32, 0x00, 0x00,
                                      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                                      0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00
 };
@@ -154,7 +154,7 @@ USB Usb;
 Max_LCD LCD;
 
 void setup() {
-  // set up the LCD's number of rows and columns: 
+  // set up the LCD's number of rows and columns:
   LCD.begin(16, 2);
   LCD.home();
   LCD.print("PS3 Controller");
@@ -169,7 +169,7 @@ void setup() {
 }
 
 void loop() {
-  
+
 
     Max.Task();
     Usb.Task();
@@ -178,7 +178,7 @@ void loop() {
         process_report();
         Usb.setUsbTaskState( USB_STATE_RUNNING );
     }
-    if( Usb.getUsbTaskState() == USB_STATE_RUNNING ) {  //poll the PS3 Controller 
+    if( Usb.getUsbTaskState() == USB_STATE_RUNNING ) {  //poll the PS3 Controller
         PS3_poll();
     }
 }
@@ -203,9 +203,9 @@ void PS3_init( void )
     ep_record[ REPORT_EP ].Interval  = EP_POLL;
     ep_record[ REPORT_EP ].sndToggle = bmSNDTOG0;
     ep_record[ REPORT_EP ].rcvToggle = bmRCVTOG0;
-    
+
     Usb.setDevTableEntry( PS3_ADDR, ep_record );              //plug kbd.endpoint parameters to devtable
-    
+
     /* read the device descriptor and check VID and PID*/
     rcode = Usb.getDevDescr( PS3_ADDR, ep_record[ CONTROL_EP ].epAddr, DEV_DESCR_LEN , buf );
     if( rcode ) {
@@ -215,38 +215,38 @@ void PS3_init( void )
     }
     if((buf[ 8 ] != PS3_VID_LO) || (buf[ 9 ] != PS3_VID_HI) || (buf[ 10 ] != PS3_PID_LO) || (buf[ 11 ] != PS3_PID_HI) ) {
         Serial.print("Unsupported USB Device");
-          while(1);  //stop   
+          while(1);  //stop
     }
-    
+
     /* Configure device */
-    rcode = Usb.setConf( PS3_ADDR, ep_record[ CONTROL_EP ].epAddr, PS3_CONFIGURATION );                    
+    rcode = Usb.setConf( PS3_ADDR, ep_record[ CONTROL_EP ].epAddr, PS3_CONFIGURATION );
     if( rcode ) {
         Serial.print("Error attempting to configure PS3 controller. Return code :");
         Serial.println( rcode, HEX );
         while(1);  //stop
     }
-    
- 
+
+
     /* Set the PS3 controller to send reports */
-    for (i=0; i < PS3_F4_REPORT_LEN; i++) buf[i] = pgm_read_byte_near( feature_F4_report + i); 
+    for (i=0; i < PS3_F4_REPORT_LEN; i++) buf[i] = pgm_read_byte_near( feature_F4_report + i);
     rcode = Usb.setReport( PS3_ADDR, ep_record[ CONTROL_EP ].epAddr, PS3_F4_REPORT_LEN,  PS3_IF, HID_REPORT_FEATURE, PS3_F4_REPORT_ID , buf );
     if( rcode ) {
         Serial.print("Set report error: ");
         Serial.println( rcode, HEX );
         while(1);  //stop
-       
+
     }
-    
+
     /* Set the PS3 controller LED 1 On */
-    for (i=0; i < PS3_01_REPORT_LEN; i++) buf[i] = pgm_read_byte_near( output_01_report + i); 
+    for (i=0; i < PS3_01_REPORT_LEN; i++) buf[i] = pgm_read_byte_near( output_01_report + i);
     rcode = Usb.setReport( PS3_ADDR, ep_record[ CONTROL_EP ].epAddr, PS3_01_REPORT_LEN,  PS3_IF, HID_REPORT_OUTPUT, PS3_01_REPORT_ID , buf );
     if( rcode ) {
         Serial.print("Set report error: ");
         Serial.println( rcode, HEX );
         while(1);  //stop
-       
+
     }
-    
+
     LCD.print("PS3 initialized");
     Serial.println("PS3 initialized");
     delay(200);
@@ -256,17 +256,17 @@ void PS3_init( void )
     LCD.home();
     LCD.print("Main Menu");
     LCD.setCursor(0,1);
-    strcpy_P(lcdbuffer, (char*)pgm_read_word(&(menu_table[selscreen]))); 
+    strcpy_P(lcdbuffer, (char*)pgm_read_word(&(menu_table[selscreen])));
     LCD.print(lcdbuffer);
 
-    
+
 }
 
 /* Poll PS3 and print result */
 
 void PS3_poll( void )
 {
- 
+
  byte rcode = 0;     //return code
     /* poll PS3 */
     rcode = Usb.inTransfer(PS3_ADDR, ep_record[ REPORT_EP ].epAddr, PS3_01_REPORT_LEN, buf );
@@ -287,16 +287,16 @@ void process_report(void)
     LCD.home();
     LCD.print("Main Menu");
     LCD.setCursor(0,1);
-    strcpy_P(lcdbuffer, (char*)pgm_read_word(&(menu_table[selscreen]))); 
+    strcpy_P(lcdbuffer, (char*)pgm_read_word(&(menu_table[selscreen])));
     LCD.print(lcdbuffer);
     oldbuttons1 = buttons1;
     oldbuttons2 = buttons2;
 
   }
-  
+
   switch (screen){
-    
-    case Root:     
+
+    case Root:
       if(buttonchange){
         if(buDown) selscreen--;
         else if(buUp | buSelect) selscreen++;
@@ -311,7 +311,7 @@ void process_report(void)
           oldbuttons1 = buttons1;
           oldbuttons2 = buttons2;
           break;
-          
+
         }
         if (selscreen == 0) selscreen = 1;
         if (selscreen > 8) selscreen = 1;
@@ -319,13 +319,13 @@ void process_report(void)
         LCD.home();
         LCD.print("Main Menu:");
         LCD.setCursor(0,1);
-        strcpy_P(lcdbuffer, (char*)pgm_read_word(&(menu_table[selscreen]))); 
+        strcpy_P(lcdbuffer, (char*)pgm_read_word(&(menu_table[selscreen])));
         LCD.print(lcdbuffer);
         oldbuttons1 = buttons1;
         oldbuttons2 = buttons2;
       }
       break;
-    
+
     case Basic:
       if(buttonchange){
         LCD.home();
@@ -339,15 +339,15 @@ void process_report(void)
         LCD.setCursor(15,0);
         if (buR1) LCD.print('X');
         else LCD.print(' ');
-        
+
         LCD.setCursor(15,1);
         if (buR2) LCD.print('X');
         else LCD.print(' ');
       }
-      
+
       break;
-    
-    case Buttons:  
+
+    case Buttons:
       if(buttonchange){
         LCD.home();
         LCD.print("0123456789ABCDEF");
@@ -367,11 +367,11 @@ void process_report(void)
         LCD.print(lcdbuffer);
         oldbuttons1 = buttons1;
         oldbuttons2 = buttons2;
- 
+
       }
-      
+
       break;
-    
+
     case Joystick:
       LCD.home();
       LCD.print('^');
@@ -390,7 +390,7 @@ void process_report(void)
       LCD.print((unsigned char)RAnalogX, DEC);
       LCD.print("  ");
       break;
-      
+
     case Pressure:
       LCD.home();
       LCD.print((unsigned char)AnalogUp, DEC);
@@ -405,7 +405,7 @@ void process_report(void)
       LCD.print(" ");
       LCD.print((unsigned char)AnalogR1, DEC);
       LCD.print("      ");
- 
+
       LCD.setCursor(0,1);
       LCD.print((unsigned char)AnalogCircle, DEC);
       LCD.print(" ");
@@ -419,9 +419,9 @@ void process_report(void)
       LCD.print(" ");
       LCD.print((unsigned char)AnalogR2, DEC);
       LCD.print("      ");
-     
+
       break;
-      
+
     case Accelerometer:
       LCD.home();
       LCD.print('X');
@@ -440,7 +440,7 @@ void process_report(void)
       LCD.print(GyroX, DEC);
       LCD.print("  ");
       break;
-      
+
     case LED:
       if(buttonchange){
         oldbuttons1 = buttons1;
@@ -468,7 +468,7 @@ void process_report(void)
       LCD.setCursor((lrcursor * 2),1);
       LCD.cursor();
       /* default buffer values */
-      for (i=0; i < PS3_01_REPORT_LEN; i++) buf[i] = pgm_read_byte_near( output_01_report + i); 
+      for (i=0; i < PS3_01_REPORT_LEN; i++) buf[i] = pgm_read_byte_near( output_01_report + i);
       /* LED setings */
       buf[9] = (ledrum & 0x0f) << 1;
       /* rumble settings */
@@ -477,18 +477,18 @@ void process_report(void)
         if (ledrum & 0x10) buf[4] = 0xff;
         else buf[2] = 0xff;
       }
-      
+
       Usb.setReport( PS3_ADDR, ep_record[ CONTROL_EP ].epAddr, PS3_01_REPORT_LEN,  PS3_IF, HID_REPORT_OUTPUT, PS3_01_REPORT_ID , buf );
 
       delay(100);
       LCD.noCursor();
       break;
-      
+
     case Bdaddr:
       if(buttonchange){
         oldbuttons1 = buttons1;
         oldbuttons2 = buttons2;
- 
+
         if (buRight) bdcursor++;
         else if (buLeft) bdcursor--;
         if (bdcursor > 11) bdcursor = 0;
@@ -496,24 +496,24 @@ void process_report(void)
         if(buUp){
           if(bdcursor % 2){
             if ((bdaddr[bdcursor /2] & 0x0f) == 0x0f) bdaddr[bdcursor /2] &= 0xf0;
-            bdaddr[bdcursor / 2] += 0x1;           
+            bdaddr[bdcursor / 2] += 0x1;
           }
           else{
             if ((bdaddr[bdcursor /2] & 0xf0) == 0xf0) bdaddr[bdcursor /2] &= 0x0f;
-            bdaddr[bdcursor / 2] += 0x10;       
+            bdaddr[bdcursor / 2] += 0x10;
           }
-          
+
         }
         else if (buDown){
           if(bdcursor % 2){
             if ((bdaddr[bdcursor /2] & 0x0f) == 0x0) bdaddr[bdcursor /2] |= 0x0f;
-            bdaddr[bdcursor / 2] -= 0x1;           
+            bdaddr[bdcursor / 2] -= 0x1;
           }
           else{
             if ((bdaddr[bdcursor /2] & 0xf0) == 0x0) bdaddr[bdcursor /2] |= 0xf0;
-            bdaddr[bdcursor / 2] -= 0x10;       
+            bdaddr[bdcursor / 2] -= 0x10;
           }
-         
+
          }
          if( buCross){
            buf[0] = 0x01;
@@ -521,8 +521,8 @@ void process_report(void)
            for (i=0; i < 6; i++){
              buf[i+2] = bdaddr[i];
            }
-          Serial.println( "bdaddr"); 
-          Usb.setReport( PS3_ADDR, ep_record[ CONTROL_EP ].epAddr, PS3_F5_REPORT_LEN,  PS3_IF, HID_REPORT_FEATURE, PS3_F5_REPORT_ID , buf ); 
+          Serial.println( "bdaddr");
+          Usb.setReport( PS3_ADDR, ep_record[ CONTROL_EP ].epAddr, PS3_F5_REPORT_LEN,  PS3_IF, HID_REPORT_FEATURE, PS3_F5_REPORT_ID , buf );
         }
       }
       LCD.home();
@@ -532,7 +532,7 @@ void process_report(void)
         if ((unsigned char)buf[i+2] < 16) LCD.print ('0');
         LCD.print((unsigned char)buf[i + 2], HEX);
       }
-      
+
       LCD.setCursor(0,1);
       LCD.print("W: ");
       for( i=0; i < 6; i++){
@@ -541,23 +541,23 @@ void process_report(void)
       }
       LCD.setCursor(3 + bdcursor ,1);
       LCD.cursor();
-      
+
       delay(100);
       LCD.noCursor();
       break;
-      
+
     case Freememory:
       LCD.home();
       LCD.print("Free Memory ");
       LCD.print( freeMemory(), DEC );
       LCD.setCursor(0,1);
       break;
-    
+
     default:
       break;
-      
+
   }
-  
+
   return;
 }
 

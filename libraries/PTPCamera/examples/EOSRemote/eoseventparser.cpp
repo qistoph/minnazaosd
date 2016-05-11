@@ -30,7 +30,7 @@ bool EOSEventParser::EventRecordParse(uint8_t **pp, uint16_t *pcntdn)
 
 		// calculates the number of event parameters ( size / 4 - 1 )
 		paramCountdown	= (nRecSize >> 2) - 1;
-                
+
 		paramCount		=  1;
 		nRecSize		-= 4;
 		nRecStage ++;
@@ -56,10 +56,10 @@ bool EOSEventParser::EventRecordParse(uint8_t **pp, uint16_t *pcntdn)
 			// C189 - Property Value, C18A - Enumerator Type
 			case 3:
 				eosEvent.propValue = varBuffer;
-                                        
+
 				if (eosEvent.eventCode == EOS_EC_DevPropChanged)
 				{
-                                        
+
                                         switch (eosEvent.propCode)
                                         {
                                         case EOS_DPC_Aperture:

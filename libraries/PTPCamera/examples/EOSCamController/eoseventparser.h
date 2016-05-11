@@ -47,7 +47,7 @@ class EOSEventParser : public PTPReadParser
 	void InitEOSEventStruct();
 
 public:
-	EOSEventParser() : 
+	EOSEventParser() :
 		constInitialEventCode(0xFFFF),
 		nStage(0),
 		nRecStage(0),
@@ -55,8 +55,8 @@ public:
 		varBuffer(0),
 		paramCountdown(0),
 		paramsChanged(0)
-		{ 
-			theBuffer.pValue = &varBuffer; 
+		{
+			theBuffer.pValue = &varBuffer;
 		};
 
 	void Reset()

@@ -19,15 +19,15 @@ class ScreenItem
 {
       ScreenItemAttributes    itemAttribs;
       void                    *dataItem;
-      
+
       void Print(Max_LCD *p);
-      
+
       void SetAttribs(uint8_t left, uint8_t top, uint8_t len, bool highlighted, bool pgm);
-      
+
 public:
     ScreenItem(uint8_t left, uint8_t top, uint8_t len, bool highlighted, DataItemBase *item);
     ScreenItem(uint8_t left, uint8_t top, uint8_t len, bool highlighted, const char *item);
-    
+
     void Update(Max_LCD *pLcd, bool initial = true);
     void Highlight(bool on) { itemAttribs.bmHighlighted = (on) ? 1 : 0; itemAttribs.bmHlChanged = 1; };
     bool IsHighlighted() { return (itemAttribs.bmHighlighted == 1); };

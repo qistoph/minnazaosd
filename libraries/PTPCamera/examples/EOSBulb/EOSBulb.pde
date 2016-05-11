@@ -29,12 +29,12 @@ class CamStateHandlers : public EOSStateHandlers
 {
       enum CamStates { stInitial, stDisconnected, stConnected };
       CamStates stateConnected;
-    
+
 public:
-      CamStateHandlers() : stateConnected(stInitial) 
+      CamStateHandlers() : stateConnected(stInitial)
       {
       };
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 } CamStates;
@@ -55,9 +55,9 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     if (stateConnected == stDisconnected)
     {
         stateConnected = stConnected;
-        
+
          uint16_t rc = Eos.SetProperty(EOS_DPC_ShutterSpeed,SHUTTER_SPEED_BULB);
-    
+
         if (rc != PTP_RC_OK)
             Message(PSTR("Error: "), rc);
     }
@@ -67,7 +67,7 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
     Eos.StopBulb();
 }
 
-void setup() 
+void setup()
 {
   Serial.begin( 115200 );
   Serial.println("Start");

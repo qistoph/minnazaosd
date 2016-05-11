@@ -12,13 +12,13 @@ void uploadFont()
     osd.clear();
     osd.setPanel(6,9);
     osd.openPanel();
-    osd.printf_P(PSTR("Update CharSet")); 
+    osd.printf_P(PSTR("Update CharSet"));
     osd.closePanel();
 
 
     Serial.printf_P(PSTR("Ready for Font\n"));
 
-    while(font_count < 256) { 
+    while(font_count < 256) {
         int8_t incomingByte = Serial.read();
         switch(incomingByte) // parse and decode mcm file
         {
@@ -65,10 +65,10 @@ void uploadFont()
                 bit_count = 0;
             break;
         case 0x0a: // line feed, ignore
-            //Serial.println("ln");   
+            //Serial.println("ln");
             break;
         case 0x30: // ascii '0'
-        case 0x31: // ascii '1' 
+        case 0x31: // ascii '1'
             ascii_binary[bit_count] = incomingByte;
             bit_count++;
             break;
@@ -77,10 +77,10 @@ void uploadFont()
         }
 
         // we have one completed character
-        // write the character to NVM 
+        // write the character to NVM
         if(byte_count == 64)
         {
-            osd.write_NVM(font_count, character_bitmap);    
+            osd.write_NVM(font_count, character_bitmap);
             byte_count = 0;
             font_count++;
             Serial.printf_P(PSTR("Char Done\n"));

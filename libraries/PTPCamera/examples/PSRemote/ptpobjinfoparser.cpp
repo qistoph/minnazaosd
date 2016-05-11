@@ -1,42 +1,42 @@
 #include "ptpobjinfoparser.h"
 
-const char* PTPObjInfoParser::acNames[] PROGMEM = 
+const char* PTPObjInfoParser::acNames[] PROGMEM =
 {
 	msgUndefined,
-	msgAssociation,	
-	msgScript,		
-	msgExecutable,	
-	msgText,			
-	msgHTML,			
-	msgDPOF,			
-	msgAIFF,	 		
-	msgWAV,			
-	msgMP3,		
-	msgAVI,			
-	msgMPEG,			
-	msgASF,			
-	msgQT			
+	msgAssociation,
+	msgScript,
+	msgExecutable,
+	msgText,
+	msgHTML,
+	msgDPOF,
+	msgAIFF,
+	msgWAV,
+	msgMP3,
+	msgAVI,
+	msgMPEG,
+	msgASF,
+	msgQT
 };
 
-const char* PTPObjInfoParser::imNames[] PROGMEM = 
+const char* PTPObjInfoParser::imNames[] PROGMEM =
 {
 	msgUndefined,
-	msgEXIF_JPEG,			
-	msgTIFF_EP,			
-	msgFlashPix,			
-	msgBMP,				
-	msgCIFF,				
-	msgUndefined_0x3806,	
-	msgGIF,				
-	msgJFIF,				
-	msgPCD,				
-	msgPICT,				
-	msgPNG,				
-	msgUndefined_0x380C,	
-	msgTIFF,				
-	msgTIFF_IT,			
-	msgJP2,				
-	msgJPX,				
+	msgEXIF_JPEG,
+	msgTIFF_EP,
+	msgFlashPix,
+	msgBMP,
+	msgCIFF,
+	msgUndefined_0x3806,
+	msgGIF,
+	msgJFIF,
+	msgPCD,
+	msgPICT,
+	msgPNG,
+	msgUndefined_0x380C,
+	msgTIFF,
+	msgTIFF_IT,
+	msgJP2,
+	msgJPX,
 };
 
 void PTPObjInfoParser::PrintFormat(uint16_t op)
@@ -57,37 +57,37 @@ void PTPObjInfoParser::PrintFormat(uint16_t op)
 			case MTP_OFC_Undefined_Firmware:
 				Notify(msgUndefined_Firmware);
 				break;
-			case MTP_OFC_Windows_Image_Format:	
+			case MTP_OFC_Windows_Image_Format:
 				Notify(msgWindows_Image_Format);
 				break;
-			case MTP_OFC_Undefined_Audio:			
+			case MTP_OFC_Undefined_Audio:
 				Notify(msgUndefined_Audio);
 				break;
-			case MTP_OFC_WMA:						
+			case MTP_OFC_WMA:
 				Notify(msgWMA);
 				break;
-			case MTP_OFC_OGG:						
+			case MTP_OFC_OGG:
 				Notify(msgOGG);
 				break;
-			case MTP_OFC_AAC:						
+			case MTP_OFC_AAC:
 				Notify(msgAAC);
 				break;
-			case MTP_OFC_Audible:					
+			case MTP_OFC_Audible:
 				Notify(msgAudible);
 				break;
-			case MTP_OFC_FLAC:					
+			case MTP_OFC_FLAC:
 				Notify(msgFLAC);
 				break;
-			case MTP_OFC_Undefined_Video:			
+			case MTP_OFC_Undefined_Video:
 				Notify(msgUndefined_Video);
 				break;
-			case MTP_OFC_WMV:						
+			case MTP_OFC_WMV:
 				Notify(msgWMV);
 				break;
-			case MTP_OFC_MP4_Container:			
+			case MTP_OFC_MP4_Container:
 				Notify(msgMP4_Container);
 				break;
-			case MTP_OFC_MP2:						
+			case MTP_OFC_MP2:
 				Notify(msgMP2);
 				break;
 			case MTP_OFC_3GP_Container:

@@ -24,10 +24,10 @@
 class CamStateHandlers : public PTPStateHandlers
 {
       bool stateConnected;
-    
+
 public:
       CamStateHandlers() : stateConnected(false) {};
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 } CamStates;
@@ -49,14 +49,14 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
         stateConnected = true;
 
     uint16_t rc = Eos.Capture();
-    
+
     if (rc != PTP_RC_OK)
         Message(PSTR("Error: "), rc);
-    
+
     delay(5000);
 }
 
-void setup() 
+void setup()
 {
   Serial.begin( 115200 );
   Serial.println("Start");
@@ -64,7 +64,7 @@ void setup()
   delay( 200 );
 }
 
-void loop() 
+void loop()
 {
     Eos.Task();
 }

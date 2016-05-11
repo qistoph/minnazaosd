@@ -54,7 +54,7 @@ bool revregcheck()
   switch( tmpbyte ) {
     case( 0x01 ):  //rev.01
       printProgStr(PSTR("01"));
-      break;  
+      break;
     case( 0x12 ):  //rev.02
       printProgStr(PSTR("02"));
       break;
@@ -118,7 +118,7 @@ bool osctest()
       printProgStr( testpassed_msg );
       return( true );
     }
-  }//for i = 
+  }//for i =
   return(false);
 }
 /* Stop/start oscillator */
@@ -148,10 +148,10 @@ bool usbtest()
         case( USB_ATTACHED_SUBSTATE_RESET_DEVICE ):
           printProgStr(PSTR("\r\nDevice connected. Resetting"));
           break;
-        case( USB_ATTACHED_SUBSTATE_WAIT_SOF ): 
+        case( USB_ATTACHED_SUBSTATE_WAIT_SOF ):
           printProgStr(PSTR("\r\nReset complete. Waiting for the first SOF..."));
           //delay( 1000 );
-          break;  
+          break;
         case( USB_ATTACHED_SUBSTATE_GET_DEVICE_DESCRIPTOR_SIZE ):
           printProgStr(PSTR("\r\nSOF generation started. Enumerating device."));
           break;
@@ -168,7 +168,7 @@ bool usbtest()
               print_hex( rcode, 8 );
             }
             else {
-              printProgStr(PSTR("\r\n\nAll tests passed. Press RESET to restart test")); 
+              printProgStr(PSTR("\r\n\nAll tests passed. Press RESET to restart test"));
               while(1);
             }
           break;
@@ -227,7 +227,7 @@ bool gpiocheck()
  byte tmpbyte = 0;
   printProgStr(PSTR("\r\nChecking GPIO lines. Install GPIO loopback adapter and press any key to continue..."));
   while( Serial.available() == 0 );  //wait for input
-  Serial.read();                     //empty input buffer  
+  Serial.read();                     //empty input buffer
     for( byte i = 0; i < 255; i++ ) {
       Max.gpioWr( i );
       tmpbyte = Max.gpioRd();
@@ -242,7 +242,7 @@ bool gpiocheck()
     printProgStr( testpassed_msg );
     return( true );
 }
-/* Test halted state. Generates 0x55 to aid in SPI troubleshooting */    
+/* Test halted state. Generates 0x55 to aid in SPI troubleshooting */
 void test_halted()
 {
   printProgStr( test_halted_msg );
@@ -250,7 +250,7 @@ void test_halted()
   while( 1 )  {            //System Stop. Generating pattern to keep SCLK, MISO, MOSI, SS busy
     digitalWrite(MAX_SS,LOW);
     Max.regWr( 0x55, 0x55 );
-//    Spi.transfer( 0x55 ); 
+//    Spi.transfer( 0x55 );
     digitalWrite(MAX_SS,HIGH);
   }
 }
@@ -260,7 +260,7 @@ void test_halted()
 /* printProgStr((char*)pgm_read_word(&mtpopNames[(op & 0xFF)]));   */
 void printProgStr(const char* str )
 {
-  if(!str) { 
+  if(!str) {
     return;
   }
   char c;
@@ -291,6 +291,6 @@ void print_hex(int v, int num_places)
   {
     digit = ((v >> (num_nibbles-1) * 4)) & 0x0f;
     Serial.print(digit, HEX);
-  } 
+  }
   while(--num_nibbles);
 }

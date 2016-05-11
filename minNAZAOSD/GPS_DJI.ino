@@ -32,7 +32,7 @@
 
 static char gps_rx_buffer[sizeof(struct DJIPacket)];
 static struct GPS_VALUES GPSValues;
-static struct GPS_RX_STATS gpsRxStats; 
+static struct GPS_RX_STATS gpsRxStats;
 
 
 short decodeShort(byte* d, unsigned char mask)
@@ -56,13 +56,13 @@ long decodeLong(byte* d, unsigned char mask)
     for (int i=0; i<4; i++)
 	val.b[i] = *d++ ^ mask;
     return val.l;
-} 
+}
 
 
 void parse_dji_gps(struct DJI_GPS *gps)
 {
 	int mask = gps->mask;
-	
+
         if (gps->flags ^ mask & STATUS_FLAGS_GPSFIX_OK) {
             switch (gps->gpsFix ^ mask) {
 		case STATUS_GPSFIX_2DFIX:
@@ -83,13 +83,13 @@ void parse_dji_gps(struct DJI_GPS *gps)
 	GPSValues.Longitude	= (float)decodeLong((byte*)&gps->lon,  mask) / 10000000.0;
 	GPSValues.Altitude	= (float)decodeLong((byte*)&gps->hMSL, mask) / 1000.0;
 	GPSValues.Down		= (float)decodeLong((byte*)&gps->velD, mask) / 100.0;
-	
+
 	float velN		= (float)decodeLong((byte*)&gps->velN, mask) / 100.0;
 	float velE		= (float)decodeLong((byte*)&gps->velE, mask) / 100.0;
-	
+
 	// calculate groundspeed
 	GPSValues.Groundspeed	= sqrt(velN * velN + velE * velE);
-	
+
 #ifndef DJI_HEADING_FROM_MAG
 	// calculate heading
 	float heading = atan2(velE, velN) * 180.0 / M_PI;
@@ -103,16 +103,16 @@ void parse_dji_mag(struct DJI_MAG *mag)
 {
 #ifdef DJI_HEADING_FROM_MAG
 	int mask = mag->mask;
-	
+
 	short x = decodeShort((byte*)&mag->magX, mask) ^ 0x0100;
 	short y = decodeShort((byte*)&mag->magY, mask) ^ 0x0100;
-	
+
 	float heading = -atan2(y, x) * 180.0 / M_PI;
 	if (heading < 0.0) heading += 360.0;
-	
+
 	// TODO add magnetic declination
 	// TODO add tilt compensation
-	
+
 	GPSValues.Heading	= heading;
 #endif
 }

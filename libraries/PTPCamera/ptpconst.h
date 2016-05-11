@@ -307,4 +307,4 @@ struct PTPUSBEventContainer
 #define PTP_DPGS_Get						0x00
 #define PTP_DPGS_GetSet						0x01
 
-#endif //__PTPCONST_H__ 
+#endif //__PTPCONST_H__

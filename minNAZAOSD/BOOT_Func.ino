@@ -25,15 +25,15 @@ void loadBar() { //change name due we don't have CLI anymore
   panBoot(barX,barY);
 
   delay(500);    // To give small extra waittime to users
-//  Serial.flush(); 
-  
-  // Our main loop to wait input from user.  
+//  Serial.flush();
+
+  // Our main loop to wait input from user.
   for(waitTimer = 0; waitTimer <= BOOTTIME; waitTimer++) {
 
     // How often we update our progress bar is depending on modulo
     if(waitTimer % (BOOTTIME / 8) == 0) {
       barStep++;
-      
+
       // Update bar it self
       osd.setPanel(barX + 12, barY);
       osd.openPanel();
@@ -68,7 +68,7 @@ void loadBar() { //change name due we don't have CLI anymore
       }
       osd.closePanel();
     }
-    
+
     delay(1);       // Minor delay to make sure that we stay here long enough
   }
 }

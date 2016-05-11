@@ -7,7 +7,7 @@
 class StateMachine
 {
     static StateMachine    *currentState;
-    
+
 protected:
     virtual bool OnInitialState() { return true; };
 
@@ -41,7 +41,7 @@ class GPInRegister
     ControlStates    controlStates;
     MAX3421E        *pMax;
     int8_t          encoderValue;
-    
+
 public:
     GPInRegister(MAX3421E *pmax) : controlStates(GPIN_ENCODER_MASK | GPIN_ENC_BUT_MASK | GPIN_EXT_BUT_MASK), pMax(pMax), encoderValue(0) {};
     void CheckControls();

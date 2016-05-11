@@ -75,7 +75,7 @@
 #define MEASURE_PERIOD			95	// ms
 
 
-// EEPROM Stepping, be careful not to overstep. 
+// EEPROM Stepping, be careful not to overstep.
 // We reserved floats for just to be sure if some values needs to be
 // changed in future.
 // byte  = 1
@@ -101,7 +101,7 @@
 #define HDis_BIT       4
 #define WDir_BIT       5 //
 #define WDis_BIT       6 //
-#define Time_BIT       7 
+#define Time_BIT       7
 
 // panC_REG Byte has:
 #define CurA_BIT       0
@@ -176,20 +176,20 @@
 #define panHomeDis_en_ADDR 72
 #define panHomeDis_x_ADDR 74
 #define panHomeDis_y_ADDR 76
-#define panWPDir_en_ADDR 80 
-#define panWPDir_x_ADDR 82  
-#define panWPDir_y_ADDR 84  
-#define panWPDis_en_ADDR 86 
-#define panWPDis_x_ADDR 88  
-#define panWPDis_y_ADDR 90  
-#define panRSSI_en_ADDR 92 
-#define panRSSI_x_ADDR 94  
-#define panRSSI_y_ADDR 96  
+#define panWPDir_en_ADDR 80
+#define panWPDir_x_ADDR 82
+#define panWPDir_y_ADDR 84
+#define panWPDis_en_ADDR 86
+#define panWPDis_x_ADDR 88
+#define panWPDis_y_ADDR 90
+#define panRSSI_en_ADDR 92
+#define panRSSI_x_ADDR 94
+#define panRSSI_y_ADDR 96
 
 // Third set of 8 panels
-#define panCur_A_en_ADDR 98 
-#define panCur_A_x_ADDR 100 
-#define panCur_A_y_ADDR 102 
+#define panCur_A_en_ADDR 98
+#define panCur_A_x_ADDR 100
+#define panCur_A_y_ADDR 102
 #define panCurB_en_ADDR 104 //(!Not implemented)
 #define panCurB_x_ADDR 106 //
 #define panCurB_y_ADDR 108 //

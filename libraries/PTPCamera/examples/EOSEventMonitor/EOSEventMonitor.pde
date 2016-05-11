@@ -24,12 +24,12 @@ class CamStateHandlers : public EOSStateHandlers
 {
       enum CamStates { stInitial, stDisconnected, stConnected };
       CamStates stateConnected;
-    
+
 public:
-      CamStateHandlers() : stateConnected(stInitial) 
+      CamStateHandlers() : stateConnected(stInitial)
       {
       };
-      
+
       virtual void OnDeviceDisconnectedState(PTP *ptp);
       virtual void OnDeviceInitializedState(PTP *ptp);
 };
@@ -61,12 +61,12 @@ void CamStateHandlers::OnDeviceInitializedState(PTP *ptp)
 void OnPTPPollTimer()
 {
     Serial.println("\r\n");
-    
+
     HexDump  hex;
     Eos.EventCheck(&hex);
 }
 
-void setup() 
+void setup()
 {
     Serial.begin( 115200 );
     Serial.println("Start");
@@ -75,7 +75,7 @@ void setup()
     PTPPollTimer.Set(OnPTPPollTimer, 1000);
 }
 
-void loop() 
+void loop()
 {
     Eos.Task();
     PTPPollTimer.Run();
