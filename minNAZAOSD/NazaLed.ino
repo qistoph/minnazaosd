@@ -60,17 +60,17 @@ Umsetzung:
 								    --> �ber extra Abfrage unterscheiden!
 		Timer, Counter etc. auf Null, neue Auswertung
 ----------------------------------------------------------------------------------------------------------------------------------------*/
-uint8_t get_mode(char c)
+uint8_t get_mode(byte c)
 {
-	static unsigned long yg_trigger = 0;
-	static unsigned long yg_timeout = 1;
-	static uint8_t y_on = 0;
-	static uint8_t g_on = 0;
-	static uint8_t y_cnt = 0;
-	static uint8_t g_cnt = 0;
-	static uint8_t home = LED_MODE_UNKNOWN;
-	static uint8_t mode = LED_MODE_UNKNOWN;
-	
+  static unsigned long yg_trigger = 0;
+  static unsigned long yg_timeout = 1;
+  static uint8_t y_on = 0;
+  static uint8_t g_on = 0;
+  static uint8_t y_cnt = 0;
+  static uint8_t g_cnt = 0;
+  static uint8_t home = LED_MODE_UNKNOWN;
+  static uint8_t mode = LED_MODE_UNKNOWN;
+
 	unsigned long curr_ms = millis();
 	
 	switch (c) {
@@ -128,6 +128,13 @@ uint8_t get_mode(char c)
 		break;
 	}
 	
+#ifdef LED_DEBUG_VALUES
+  osd.setPanel(0, 6);
+  osd.openPanel();
+  osd.printf("y%d/%d-g%d/%d-c%x", y_cnt, y_on, g_cnt, g_on, c);
+  osd.closePanel();
+#endif
+
 	return (home | mode);
 }
 
