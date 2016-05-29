@@ -64,8 +64,8 @@
 #define NAZA_LED_POS_X			(panFMod_XY[0][panel] + 4)
 #define NAZA_LED_POS_Y			(panFMod_XY[1][panel])
 
-#define NAZA_THRESHOLD_YELLOW   900
-#define NAZA_THRESHOLD_RED      550
+#define NAZA_THRESHOLD_YELLOW   950
+#define NAZA_THRESHOLD_RED      600
 #define NAZA_THRESHOLD_GREEN    250
 
 #define NAZA_CHAR_OFF			0x00
