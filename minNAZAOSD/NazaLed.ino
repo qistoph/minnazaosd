@@ -38,26 +38,26 @@ void naza_led_init(void)
 
 /*----------------------------------------------------------------------------------------------------------------------------------------
 Ziel: Erkennung folgender Modi:
-				(für alle gilt: rot darf blinken)
-	MAN	Manual Mode	kein gelb kein grün
-	ATT	ATTI Mode	gelb oder gelb gelb kein grün
-	GPS	GPS Mode	grün oder grün grün kein gelb
-	IOC	IOC Mode	gelb grün oder gelb grün grün
-	FS 	FailSafe	gelb gelb gelb gelb gelb gelb gelb gelb gelb gelb gelb ... kein grün
-	'record home point'	ca.3000ms grün grün grün grün grün grün grün grün grün ... kein gelb
+				(fÃ¼r alle gilt: rot darf blinken)
+	MAN	Manual Mode	kein gelb kein grÃ¼n
+	ATT	ATTI Mode	gelb oder gelb gelb kein grÃ¼n
+	GPS	GPS Mode	grÃ¼n oder grÃ¼n grÃ¼n kein gelb
+	IOC	IOC Mode	gelb grÃ¼n oder gelb grÃ¼n grÃ¼n
+	FS 	FailSafe	gelb gelb gelb gelb gelb gelb gelb gelb gelb gelb gelb ... kein grÃ¶n
+	'record home point'	ca.3000ms grÃ¶n grÃ¶n grÃ¶n grÃ¶n grÃ¶n grÃ¶n grÃ¶n grÃ¶n grÃ¶n ... kein gelb
 
 Umsetzung:
-	- Wenn 3 Sekunden lang kein gelb oder grün		--> MAN
-	- Wenn gelb oder grün steigende Flanke erkannt, dann
-	  Timer starten und steigende gelb und grün Flanken zählen.
+	- Wenn 3 Sekunden lang kein gelb oder grï¿½n		--> MAN
+	- Wenn gelb oder grï¿½n steigende Flanke erkannt, dann
+	  Timer starten und steigende gelb und grï¿½n Flanken zï¿½hlen.
 	  Nach 1 Sekunde Anzahl der Flanken auswerten:
-		gelb = 1 oder 2 und grün = 0			--> ATT
-		grün = 1 oder 2 und gelb = 0			--> GPS
-		gelb = 1 und grün = 1 oder 2			--> IOC
+		gelb = 1 oder 2 und grï¿½n = 0			--> ATT
+		grï¿½n = 1 oder 2 und gelb = 0			--> GPS
+		gelb = 1 und grï¿½n = 1 oder 2			--> IOC
 		gelb > 3					--> FS
-		grün > 3 und ca. 3000ms lang			--> 'record home point' evtl. erkannt
+		grï¿½n > 3 und ca. 3000ms lang			--> 'record home point' evtl. erkannt
 								    Achtung: kann aber auch 'Aircraft moved, sensor bias too big' sein
-								    --> über extra Abfrage unterscheiden!
+								    --> ï¿½ber extra Abfrage unterscheiden!
 		Timer, Counter etc. auf Null, neue Auswertung
 ----------------------------------------------------------------------------------------------------------------------------------------*/
 uint8_t get_mode(char c)
@@ -109,7 +109,7 @@ uint8_t get_mode(char c)
 				if (y_cnt == 0 && g_cnt >  6) {			// maybe we are getting home point, check further
 					if (yg_trigger && curr_ms - yg_trigger > LED_HOME_CHECK) {
 #ifdef LED_DEBUG
-						osd.setPanel(0, 1);
+						osd.setPanel(5, 1);
 						osd.openPanel();
 						osd.printf("%3u", g_cnt);
 						osd.closePanel();
