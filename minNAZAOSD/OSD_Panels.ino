@@ -189,7 +189,8 @@ void switchPanels() {
     static uint8_t      	osd_off_switch = 0;
     static uint8_t      	osd_switch_last = 100;
     static unsigned long	osd_switch_time = 0;
-    static uint16_t		ch_raw = 0;
+    static uint16_t		    ch_raw = 0;
+    static uint8_t        ch_raw_was_lo = 1;
 
     if (ch_toggle == 4) {
         if (0) { //(osd_mode != FLIGHTSTATUS_FLIGHTMODE_AUTOTUNE) && (osd_mode != FLIGHTSTATUS_FLIGHTMODE_POSITIONHOLD)) {
@@ -251,6 +252,7 @@ void switchPanels() {
             }
         } else {
             if (ch_raw > PWM_LO) {
+              if(ch_raw_was_lo) {
                 if (millis() <= SETUP_TIME && !setup_menu_active) {
                     if (osd_switch_time + MODE_SWITCH_TIME / 2 < millis()) {
                         setup_menu_active = false; //true;
@@ -269,8 +271,12 @@ void switchPanels() {
                         osd_switch_time = millis();
                     }
                 }
-	    }
-        }
+              }
+              ch_raw_was_lo = 0;
+	          } else {
+	            ch_raw_was_lo = 1;
+	          }
+       }
     }
 }
 
